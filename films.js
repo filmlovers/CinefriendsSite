@@ -71,7 +71,7 @@ const films = [
     legacyKey: "Eternal Sunshine of the Spotless Mind — Lunedì 7 Dicembre",
     title: "Eternal Sunshine of the Spotless Mind",
     duration: 108,
-    posterTitle: "THE ETHERNAL<br>SUNSHINE <br> OF THE <br> SPOTLESS MIND",
+    posterTitle: "ETHERNAL<br>SUNSHINE<br>OF THE SPOTLESS MIND",
     poster: "assets/locandine/eternal_sunshine.webp",
     genre: "Romantico/Sci-fi · 2004",
     description: "Clemetine, stanca del rapporto con Joel, si fa asportare dalla mente la parte relativa alla loro storia. Quando lui lo scopre, fa lo stesso, ma durante il procedimento cambia idea.",

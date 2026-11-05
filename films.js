@@ -1,8 +1,10 @@
-// MODIFICA QUESTO FILE PER AGGIORNARE FILM, DATE, ORARI E LUOGHI.
+// MODIFICA SOLO QUESTO FILE PER AGGIORNARE FILM, DURATE (IN MINUTI), DATE, ORARI E LUOGHI.
+// Ogni film deve avere duration: <numero di minuti>. Tutte le schermate e le email leggono questo valore.
 // Il primo elemento è il film in evidenza sulla homepage.
 const films = [
   {
     title: "Fight Club",
+    duration: 139, // minuti
     posterTitle: "FIGHT<br>CLUB",
     poster: "assets/locandine/fight_club.jpg",
     genre: "Azione · 1999",
@@ -15,6 +17,7 @@ const films = [
   },
   {
     title: "Pulp Fiction",
+    duration: 154, // minuti
     posterTitle: "PULP<br>FICTION",
     poster: "assets/locandine/pulp_fiction.jpg",
     genre: "Giallo/Thriller · 1994",
@@ -27,6 +30,7 @@ const films = [
   },
   {
     title: "Il Favoloso Mondo di Amélie",
+    duration: 122, // minuti
     posterTitle: "IL FAVOLOSO<br>MONDO DI AMÉLIE",
     poster: "assets/locandine/amelie.jpg",
     genre: "Commedia · 2001",
@@ -39,6 +43,7 @@ const films = [
   },
   {
     title: "Nuovo Cinema Paradiso",
+    duration: 155, // minuti
     posterTitle: "NUOVO CINEMA<br>PARADISO",
     poster: "assets/locandine/cinema_paradiso.jpg",
     genre: "Drammatico · 1988",
@@ -51,6 +56,7 @@ const films = [
   },
   {
     title: "The Truman Show",
+    duration: 103, // minuti
     posterTitle: "THE TRUMAN<br>SHOW",
     poster: "assets/locandine/truman_show.jpg",
     genre: "Fantascienza · 1998",

@@ -45,13 +45,13 @@
       const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
       const isAndroid = /Android/i.test(ua);
       const isMobile = isIOS || isAndroid;
-
+ 
       const toDate = x => new Date(x.replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/, "$1-$2-$3T$4:$5:$6Z"));
       const start = toDate(s), end = toDate(e);
       $("evento").textContent = "Cinefriends: " + t + " · " +
         start.toLocaleString("it-IT", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Rome" }) +
         (l ? " · " + l : "");
-
+ 
       const esc = x => x.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
       const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
       const ics = [
@@ -65,20 +65,44 @@
       ].join("\r\n");
       const fname = "cinefriends-" + t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".ics";
       const blobUrl = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
-
+ 
       // Link di Google Calendar e Outlook (funzionano su qualsiasi dispositivo)
-      $("google").href = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      const googleUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
         "&text=" + encodeURIComponent("Cinefriends: " + t) + "&dates=" + s + "/" + e +
         "&details=" + encodeURIComponent(d) + "&location=" + encodeURIComponent(l);
+      $("google").href = googleUrl;
+      // Sul telefono il link web di Google Calendar viene intercettato dall'app, che spesso si apre
+      // senza creare l'evento. Su Android si usa quindi il comando nativo "inserisci evento"
+      // (l'app Calendario si apre con i campi già compilati); se non è disponibile, ripiega sul link web.
+      if (isAndroid) {
+        $("google").removeAttribute("target");
+        $("google").href = "intent:#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.dir/event" +
+          ";S.title=" + encodeURIComponent("Cinefriends: " + t) +
+          ";S.description=" + encodeURIComponent(d) +
+          ";S.eventLocation=" + encodeURIComponent(l) +
+          ";l.beginTime=" + start.getTime() + ";l.endTime=" + end.getTime() +
+          ";S.browser_fallback_url=" + encodeURIComponent(googleUrl) + ";end";
+      } else if (isIOS) {
+        $("google").removeAttribute("target"); // stessa scheda: i popup su iPhone sono meno affidabili
+        // Su iPhone l'app Google Calendar, alla prima apertura, spesso mostra il calendario senza l'evento.
+        // Al secondo tocco lo propone correttamente: lo si spiega all'utente quando torna sulla pagina.
+        $("google").addEventListener("click", () => {
+          $("stato").innerHTML = "Se Google Calendar si è aperto <strong>senza l'evento</strong>, torna qui e tocca di nuovo " +
+            "<strong>Google Calendar</strong>: la seconda volta l'evento compare. Oppure usa “Aggiungi al calendario”.";
+        });
+      }
+      // Arrivo dal pulsante "Google Calendar" dell'email (?g=1): da computer si va diretti a Google.
+      // Da telefono si resta qui, perché serve un tocco per aprire l'app Calendario.
+      if (q.get("g") === "1" && !isMobile) { location.replace(googleUrl); return; }
       const iso = x => x.toISOString().replace(/\.\d{3}Z$/, "Z");
       $("outlook").href = "https://outlook.live.com/calendar/0/deeplink/compose?path=" + encodeURIComponent("/calendar/action/compose") +
         "&rru=addevent&subject=" + encodeURIComponent("Cinefriends: " + t) + "&startdt=" + encodeURIComponent(iso(start)) +
         "&enddt=" + encodeURIComponent(iso(end)) + "&location=" + encodeURIComponent(l) + "&body=" + encodeURIComponent(d);
-
+ 
       // Desktop: download classico del file .ics
       $("scarica").href = blobUrl;
       $("scarica").download = fname;
-
+ 
       // Telefono: il download di file "blob" spesso non funziona (soprattutto su iPhone).
       // Si usa il foglio di condivisione del telefono; se non c'è, su iPhone si apre il file come dato,
       // su Android si scarica.

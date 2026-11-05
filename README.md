@@ -1,4 +1,9 @@
-CINEFREINDS — SITO WEB STATICO
+###CINEFREINDS — SITO WEB STATICO
+
+FEATURES: Homepage, Film della Settimana con Recap Posti, Programmazione Mensile, Sezione Proposte e Commenti, Form di prenotazione con selezione grafica dei posti. 
+
+BACKEND: DB su google sheet, invio email di conferma all'admin con Web3Forms, invio email di conferma all'utente con EmailJS (con evento a calendario).
+Attenzione!!! I piani sono gratuiti, si hanno 200 invii di email di conferma al mese (200 admin, 200 utente). Evitare Prenotazioni a caso.
 
 CONTENUTO
 - index.html: homepage, film della settimana, programmazione e modulo prenotazioni.
@@ -7,6 +12,8 @@ CONTENUTO
 - script.js: visualizzazione automatica di film e programmazione.
 - grazie.html: pagina mostrata dopo l'invio del modulo.
 
+
+ISTRUZIONI
 1. PERSONALIZZARE I FILM
 Apri films.js con un editor di testo. Modifica i film, le date, l'orario, la sala e l'indirizzo.
 Il primo film nell'elenco è quello mostrato in homepage. Aggiungi o rimuovi oggetti seguendo la stessa struttura.

@@ -67,27 +67,9 @@
       const blobUrl = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
 
       // Link di Google Calendar e Outlook (funzionano su qualsiasi dispositivo)
-      const googleUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      $("google").href = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
         "&text=" + encodeURIComponent("Cinefriends: " + t) + "&dates=" + s + "/" + e +
         "&details=" + encodeURIComponent(d) + "&location=" + encodeURIComponent(l);
-      $("google").href = googleUrl;
-      // Sul telefono il link web di Google Calendar viene intercettato dall'app, che spesso si apre
-      // senza creare l'evento. Su Android si usa quindi il comando nativo "inserisci evento"
-      // (l'app Calendario si apre con i campi già compilati); se non è disponibile, ripiega sul link web.
-      if (isAndroid) {
-        $("google").removeAttribute("target");
-        $("google").href = "intent:#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.dir/event" +
-          ";S.title=" + encodeURIComponent("Cinefriends: " + t) +
-          ";S.description=" + encodeURIComponent(d) +
-          ";S.eventLocation=" + encodeURIComponent(l) +
-          ";l.beginTime=" + start.getTime() + ";l.endTime=" + end.getTime() +
-          ";S.browser_fallback_url=" + encodeURIComponent(googleUrl) + ";end";
-      } else if (isIOS) {
-        $("google").removeAttribute("target"); // stessa scheda: i popup su iPhone sono meno affidabili
-      }
-      // Arrivo dal pulsante "Google Calendar" dell'email (?g=1): da computer si va diretti a Google.
-      // Da telefono si resta qui, perché serve un tocco per aprire l'app Calendario.
-      if (q.get("g") === "1" && !isMobile) { location.replace(googleUrl); return; }
       const iso = x => x.toISOString().replace(/\.\d{3}Z$/, "Z");
       $("outlook").href = "https://outlook.live.com/calendar/0/deeplink/compose?path=" + encodeURIComponent("/calendar/action/compose") +
         "&rru=addevent&subject=" + encodeURIComponent("Cinefriends: " + t) + "&startdt=" + encodeURIComponent(iso(start)) +

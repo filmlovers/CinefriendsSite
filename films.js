@@ -8,21 +8,6 @@
 const films = [
   {
     id: "cf-proj-001",
-    legacyKey: "Fight Club — Lunedì 2 Novembre",
-    title: "Fight Club",
-    duration: 139,
-    posterTitle: "FIGHT<br>CLUB",
-    poster: "assets/locandine/fight_club.jpg",
-    genre: "Azione · 1999",
-    description: "Fight Club è un celebre film del 1999 diretto da David Fincher e tratto dal romanzo omonimo di Chuck Palahniuk del 1996. È considerato un cult del cinema contemporaneo e un thriller psicologico d'impatto.",
-    date: "Lunedì 2 Novembre",
-    time: "Ore 21:00",
-    venue: "Sala Simo",
-    address: "Via delle Robinie 15, Roma",
-    color: "terracotta"
-  },
-  {
-    id: "cf-proj-002",
     legacyKey: "Pulp Fiction — Lunedì 9 Novembre",
     title: "Pulp Fiction",
     duration: 154,
@@ -37,7 +22,7 @@ const films = [
     color: "terracotta"
   },
   {
-    id: "cf-proj-003",
+    id: "cf-proj-002",
     legacyKey: "Il Favoloso Mondo di Amélie — Lunedì 16 Novembre",
     title: "Il Favoloso Mondo di Amélie",
     duration: 122,
@@ -52,7 +37,7 @@ const films = [
     color: "plum"
   },
   {
-    id: "cf-proj-004",
+    id: "cf-proj-003",
     legacyKey: "Nuovo Cinema Paradiso — Lunedì 23 Novembre",
     title: "Nuovo Cinema Paradiso",
     duration: 155,
@@ -67,7 +52,7 @@ const films = [
     color: "olive"
   },
   {
-    id: "cf-proj-005",
+    id: "cf-proj-004",
     legacyKey: "The Truman Show — Lunedì 30 Novembre",
     title: "The Truman Show",
     duration: 103,
@@ -76,6 +61,21 @@ const films = [
     genre: "Fantascienza · 1998",
     description: "E se il mondo che conosci fosse soltanto un enorme palcoscenico? Una commedia brillante che apre molte domande.",
     date: "Lunedì 30 Novembre",
+    time: "Ore 21:00",
+    venue: "Sala Simo",
+    address: "Via delle Robinie 15, Roma",
+    color: "blue"
+  },
+  {
+    id: "cf-proj-005",
+    legacyKey: "Eternal Sunshine of the Spotless Mind — Lunedì 7 Dicembre",
+    title: "Eternal Sunshine of the Spotless Mind",
+    duration: 108,
+    posterTitle: "THE ETHERNAL<br>SUNSHINE <br> OF THE <br> SPOTLESS MIND",
+    poster: "assets/locandine/eternal_sunshine.webp",
+    genre: "Romantico/Sci-fi · 2004",
+    description: "Clemetine, stanca del rapporto con Joel, si fa asportare dalla mente la parte relativa alla loro storia. Quando lui lo scopre, fa lo stesso, ma durante il procedimento cambia idea.",
+    date: "Lunedì 7 Dicembre",
     time: "Ore 21:00",
     venue: "Sala Simo",
     address: "Via delle Robinie 15, Roma",

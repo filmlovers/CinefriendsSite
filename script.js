@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     img.src = first.poster; // se l'immagine non si carica resta la locandina tipografica
   }
-
+ 
   const list = document.getElementById("schedule-list");
   const select = document.getElementById("film");
   films.forEach((film, i) => {
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => nav.classList.remove("nav-open")));
 });
-
+ 
 // Sezione "Proposte": carica Giscus solo se giscus-config.js è stato compilato.
 function loadGiscus() {
   const cfg = window.GISCUS_CONFIG || {};
@@ -79,8 +79,8 @@ function loadGiscus() {
   Object.entries(attrs).forEach(([k, v]) => s.setAttribute("data-" + k, v));
   container.appendChild(s);
 }
-
-
+ 
+ 
 // Prenotazioni: invio con Web3Forms (https://web3forms.com)
 function setupBookingForm() {
   const form = document.getElementById("booking-form");
@@ -88,7 +88,7 @@ function setupBookingForm() {
   if (!form) return;
   const cfg = window.BOOKING_CONFIG || {};
   const button = form.querySelector(".submit-button");
-
+ 
   const show = (html, type) => {
     status.innerHTML = html;
     status.className = "form-status form-status-" + type;
@@ -109,7 +109,7 @@ function setupBookingForm() {
     const link = mailtoLink();
     show(msg + (link ? ` <a href="${link}">Invia la prenotazione via email ↗</a>` : ""), "error");
   };
-
+ 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     status.hidden = true;
@@ -172,11 +172,11 @@ function setupBookingForm() {
     }
   });
 }
-
-
+ 
+ 
 // ---------- Email di conferma con link per il calendario (EmailJS) ----------
 const MESI = { gennaio: 1, febbraio: 2, marzo: 3, aprile: 4, maggio: 5, giugno: 6, luglio: 7, agosto: 8, settembre: 9, ottobre: 10, novembre: 11, dicembre: 12 };
-
+ 
 // Orario di Roma -> data UTC (gestisce da solo ora solare/legale)
 function romeToUtc(y, m, d, h, mi) {
   const guess = Date.UTC(y, m - 1, d, h, mi);
@@ -186,7 +186,7 @@ function romeToUtc(y, m, d, h, mi) {
   const asRome = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute);
   return new Date(guess - (asRome - guess));
 }
-
+ 
 // Ricava inizio/fine dal film. Se in films.js c'è  start: "2026-11-09T21:00"  usa quello,
 // altrimenti legge il testo di "date" (es. "Lunedì 9 Novembre") e "time" (es. "Ore 21:00").
 // Facoltativo: duration (minuti, default 150).
@@ -212,7 +212,7 @@ function filmTimes(film) {
   const f = x => x.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   return { start: f(start), end: f(end) };
 }
-
+ 
 async function sendConfirmationEmail(form) {
   const cfg = window.CONFERMA_CONFIG || {};
   if (!cfg.publicKey || !cfg.serviceId || !cfg.templateId) return false;
@@ -231,6 +231,9 @@ async function sendConfirmationEmail(form) {
       ics = new URL("calendario.html?" + new URLSearchParams({
         t: film.title, s: times.start, e: times.end, l: place, d: details
       }), window.location.href).href;
+      // Il pulsante "Google Calendar" dell'email passa dalla pagina calendario.html (?g=1),
+      // che sul telefono usa l'app Calendario e da computer rimanda a Google.
+      google = ics + "&g=1";
     }
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 10000);
@@ -258,24 +261,24 @@ async function sendConfirmationEmail(form) {
     return false;
   }
 }
-
+ 
 // ---------- Contatore posti disponibili ----------
 // In films.js, per ogni film: seats = posti totali (default 7), booked = posti già confermati (default 0).
 const DEFAULT_SEATS = 7;
 function seatsTotal(film) { return Number.isFinite(film.seats) ? film.seats : DEFAULT_SEATS; }
 function seatsLeft(film) { return Math.max(0, seatsTotal(film) - (Number(film.booked) || 0)); }
-
+ 
 function setupSeatsCounter() {
   const select = document.getElementById("film");
   const people = document.getElementById("people");
   const box = document.getElementById("seats-counter");
   const button = document.querySelector("#booking-form .submit-button");
   if (!select || !people || !box) return;
-
+ 
   // si parte dal primo film con posti liberi
   const firstFree = films.findIndex(f => seatsLeft(f) > 0);
   if (firstFree > 0) select.selectedIndex = firstFree;
-
+ 
   const render = () => {
     const film = films[select.selectedIndex];
     if (!film) return;
@@ -286,7 +289,7 @@ function setupSeatsCounter() {
       return;
     }
     const total = seatsTotal(film), left = seatsLeft(film), taken = total - left;
-
+ 
     // numero di posti prenotabili: da 1 al massimo disponibile
     const previous = +people.value || 1;
     people.innerHTML = "";
@@ -298,7 +301,7 @@ function setupSeatsCounter() {
     }
     people.disabled = left === 0;
     if (button) button.disabled = left === 0;
-
+ 
     const wanted = left === 0 ? 0 : +people.value;
     const dots = Array.from({ length: total }, (_, i) =>
       `<span class="seat-dot ${i < taken ? "seat-taken" : (i < taken + wanted ? "seat-wanted" : "seat-free")}"></span>`).join("");
@@ -314,12 +317,12 @@ function setupSeatsCounter() {
   seatsRender = render;
   render();
 }
-
+ 
 // ---------- Posti automatici da Google Sheets ----------
 let seatsRender = null;     // funzione di aggiornamento del contatore (impostata da setupSeatsCounter)
 let seatsLoading = false;
 const filmKey = f => `${f.title} — ${f.date}`; // identico al valore dell'opzione nel modulo
-
+ 
 function updateFilmOptions() {
   const select = document.getElementById("film");
   if (!select) return;
@@ -336,7 +339,7 @@ function updateFilmOptions() {
     if (free >= 0) select.selectedIndex = free;
   }
 }
-
+ 
 async function loadAvailability() {
   const url = (window.POSTI_CONFIG || {}).url;
   if (!url) return;
@@ -364,7 +367,7 @@ async function loadAvailability() {
   updateFilmOptions();
   if (seatsRender) seatsRender();
 }
-
+ 
 async function reserveSeats(form, film) {
   const url = (window.POSTI_CONFIG || {}).url;
   try {

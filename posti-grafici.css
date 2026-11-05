@@ -1,0 +1,255 @@
+/* CINEFRIENDS — mappa dei posti e durata film */
+.cf-seat-picker {
+  margin: 20px 0 8px;
+  padding: 18px 16px 15px;
+  background: #f1eee7;
+  border: 1px solid #e1dbd0;
+  border-radius: 3px;
+}
+.cf-picker-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.cf-picker-heading h3 {
+  margin: 0 0 4px;
+  color: #242321;
+  font: 600 18px "Playfair Display", Georgia, serif;
+}
+.cf-picker-heading p {
+  margin: 0;
+  color: #898278;
+  font-size: 10px;
+}
+.cf-seat-selected-count {
+  flex: 0 0 auto;
+  padding: 7px 9px;
+  border-radius: 30px;
+  background: #e5dfd4;
+  color: #4c4a43;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.cf-seatmap {
+  width: 100%;
+  padding: 17px 10px 13px;
+  overflow: hidden;
+  background: #fbfaf6;
+  border: 1px solid #e6e0d6;
+  border-radius: 3px;
+}
+.cf-screen-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 22px;
+}
+.cf-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  width: min(67%, 250px);
+  min-height: 26px;
+  padding: 5px 14px;
+  color: #e9e4da;
+  background: #35332f;
+  border-radius: 3px 3px 13px 13px;
+  box-shadow: 0 7px 15px #24232120;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+.cf-screen span { color: #e8a17f; font-size: 13px; }
+.cf-seat-zone, .cf-sofa-zone {
+  width: 100%;
+  max-width: 390px;
+  margin: 0 auto;
+}
+.cf-zone-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto 9px;
+  max-width: 330px;
+  color: #8a8176;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+.cf-zone-heading small {
+  color: #aaa297;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.cf-seat-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(6px, 2vw, 13px);
+}
+.cf-floor-row { margin-bottom: 19px; }
+.cf-sofa-back {
+  width: 76%;
+  height: 9px;
+  margin: 0 auto -1px;
+  border-radius: 9px 9px 2px 2px;
+  background: #9b6553;
+}
+.cf-sofa-base {
+  width: 76%;
+  height: 7px;
+  margin: -1px auto 0;
+  border-radius: 2px 2px 7px 7px;
+  background: #9b6553;
+}
+.cf-seat {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 1 52px;
+  width: 52px;
+  min-width: 0;
+  height: 48px;
+  padding: 0;
+  border: 1px solid #bcb4a7;
+  color: #5d594f;
+  background: #e8e3d9;
+  font: 700 10px "DM Sans", sans-serif;
+  cursor: pointer;
+  transition: background .16s ease, border-color .16s ease, transform .16s ease;
+}
+.cf-seat-floor { border-radius: 13px 13px 9px 9px; }
+.cf-seat-sofa { border-radius: 7px 7px 5px 5px; }
+.cf-seat:not(:disabled):hover { transform: translateY(-2px); border-color: #e56b45; }
+.cf-seat.is-free { background: #e8e3d9; }
+.cf-seat.is-selected {
+  color: white;
+  background: #e56b45;
+  border-color: #c85a39;
+  box-shadow: 0 3px 8px #c85a3933;
+}
+.cf-seat.is-booked {
+  color: #a29b90;
+  background: #d4d0c8;
+  border-color: #d4d0c8;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  opacity: .8;
+}
+.cf-seat:focus-visible { outline: 3px solid #e56b4580; outline-offset: 3px; }
+.cf-seat:disabled { cursor: default; }
+.cf-seat-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin-top: 17px;
+  color: #817a70;
+  font-size: 9px;
+}
+.cf-seat-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.cf-legend-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+}
+.cf-legend-free { background: #e8e3d9; border: 1px solid #bcb4a7; }
+.cf-legend-selected { background: #e56b45; }
+.cf-legend-booked { background: #d4d0c8; }
+.cf-seat-hint {
+  margin: 10px 0 0;
+  color: #837a6f;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.cf-seat-hint.is-valid { color: #45704e; font-weight: 700; }
+
+/* Riepilogo a scomparsa nella sezione Questa Settimana */
+.cf-week-availability {
+  margin-top: 16px;
+  background: #fffdf8;
+  border: 1px solid #e2ddd3;
+}
+.cf-week-availability summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 15px 18px;
+  color: #34322e;
+  cursor: pointer;
+  list-style: none;
+  font-size: 11px;
+  font-weight: 700;
+}
+.cf-week-availability summary::-webkit-details-marker { display: none; }
+.cf-week-availability summary::before {
+  content: "POSTI PER L'EVENTO IN ARRIVO";
+  display: block;
+  margin-right: auto;
+  color: #9a9287;
+  font-size: 8px;
+  letter-spacing: 1.3px;
+}
+.cf-week-summary { color: #e06a45; white-space: nowrap; }
+.cf-week-toggle { color: #e56b45; font-size: 19px; font-weight: 400; }
+.cf-week-content {
+  display: grid;
+  grid-template-columns: minmax(180px, .8fr) minmax(260px, 1.2fr);
+  align-items: center;
+  gap: 20px;
+  padding: 0 18px 18px;
+  border-top: 1px solid #eee9df;
+}
+.cf-week-copy { padding-top: 16px; }
+.cf-week-film {
+  color: #242321;
+  font: 600 19px "Playfair Display", Georgia, serif;
+}
+.cf-week-status {
+  margin: 7px 0 0;
+  color: #898278;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.cf-week-map { min-width: 0; padding-top: 14px; }
+.cf-week-map .cf-seatmap { padding: 12px 8px 10px; }
+.cf-week-map .cf-screen-wrap { margin-bottom: 14px; }
+.cf-week-map .cf-seat { height: 39px; flex-basis: 43px; width: 43px; font-size: 9px; }
+.cf-week-map .cf-floor-row { margin-bottom: 14px; }
+.cf-week-map .cf-zone-heading { margin-bottom: 7px; }
+.cf-week-map .cf-seat-legend { margin-top: 12px; gap: 8px 12px; }
+
+/* Durata mostrata nelle schede */
+.cf-duration {
+  display: block;
+  color: #898278;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .2px;
+}
+.cf-featured-duration { margin-top: -7px; color: #9a7665; }
+.cf-schedule-duration { margin-top: 7px; }
+
+@media (max-width: 760px) {
+  .cf-seat-picker { padding: 15px 10px 13px; }
+  .cf-picker-heading { flex-direction: column; gap: 8px; }
+  .cf-seatmap { padding: 15px 5px 12px; }
+  .cf-seat { flex: 0 1 48px; width: 48px; height: 44px; }
+  .cf-seat-row { gap: clamp(5px, 2vw, 9px); }
+  .cf-week-availability summary { flex-wrap: wrap; padding: 13px 12px; }
+  .cf-week-availability summary::before { flex-basis: 100%; }
+  .cf-week-content { grid-template-columns: 1fr; gap: 4px; padding: 0 12px 14px; }
+  .cf-week-copy { padding-top: 13px; }
+  .cf-week-map .cf-seat { flex: 0 1 45px; width: 45px; height: 40px; }
+}
+
+@media (max-width: 360px) {
+  .cf-seat { flex-basis: 41px; width: 41px; height: 41px; font-size: 9px; }
+  .cf-week-map .cf-seat { flex-basis: 40px; width: 40px; }
+  .cf-seat-legend { gap: 8px 10px; font-size: 8px; }
+}

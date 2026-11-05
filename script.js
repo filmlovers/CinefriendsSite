@@ -1,8 +1,23 @@
+// Durata visualizzata: il dato viene esclusivamente da films.js (numero di minuti).
+function formatFilmDuration(value) {
+  const minutes = Number(value);
+  if (!Number.isFinite(minutes) || minutes <= 0) return "";
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  return hours ? `${hours} h${remainder ? ` ${remainder} min` : ""}` : `${remainder} min`;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const first = films[0];
   document.getElementById("featured-title").textContent = first.title;
   document.getElementById("featured-poster-title").innerHTML = first.posterTitle;
   document.getElementById("featured-genre").textContent = first.genre.toUpperCase();
+  const featuredDuration = document.getElementById("featured-duration");
+  if (featuredDuration) {
+    const label = formatFilmDuration(first.duration);
+    featuredDuration.textContent = label ? `Durata · ${label}` : "";
+    featuredDuration.hidden = !label;
+  }
   document.getElementById("featured-description").textContent = first.description;
   document.getElementById("featured-date").textContent = first.date;
   document.getElementById("featured-time").textContent = first.time;
@@ -35,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     row.innerHTML = `<span class="schedule-number">${String(i + 1).padStart(2, "0")}</span>
       <div class="schedule-thumb poster-${film.color}">${film.poster ? `<img src="${film.poster}" alt="Locandina di ${film.title}" loading="lazy" onerror="this.remove()">` : ""}</div>
       <div class="schedule-date">${film.date}<small>${film.time}</small></div>
-      <div class="schedule-film"><h3>${film.title}</h3><span>${film.genre}</span></div>
+      <div class="schedule-film"><h3>${film.title}</h3><span>${film.genre}</span>${formatFilmDuration(film.duration) ? `<small class="film-duration">Durata · ${formatFilmDuration(film.duration)}</small>` : ""}</div>
       <div class="schedule-place">${film.venue}<small>${film.address}</small></div>
       <a class="schedule-book" href="#prenota" aria-label="Prenota ${film.title}">↗</a>`;
     list.appendChild(row);
@@ -208,7 +223,8 @@ function filmTimes(film) {
     if (romeToUtc(y, m, d, h, mi) < new Date(now - 60 * 864e5)) y += 1;
   }
   const start = romeToUtc(y, m, d, h, mi);
-  const end = new Date(start.getTime() + (film.duration || 150) * 60000);
+  const durationMinutes = Number(film.duration);
+  const end = new Date(start.getTime() + (Number.isFinite(durationMinutes) && durationMinutes > 0 ? durationMinutes : 150) * 60000);
   const f = x => x.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   return { start: f(start), end: f(end) };
 }
@@ -321,7 +337,8 @@ function setupSeatsCounter() {
 // ---------- Posti automatici da Google Sheets ----------
 let seatsRender = null;     // funzione di aggiornamento del contatore (impostata da setupSeatsCounter)
 let seatsLoading = false;
-const filmKey = f => `${f.title} — ${f.date}`; // identico al valore dell'opzione nel modulo
+const filmKey = f => String(f.id || `${f.title} — ${f.date}`).trim();
+const filmLegacyKey = f => String(f.legacyKey || `${f.title} — ${f.date}`).trim();
  
 function updateFilmOptions() {
   const select = document.getElementById("film");
@@ -348,7 +365,13 @@ async function loadAvailability() {
   try {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 8000);
-    const res = await fetch(url + (url.includes("?") ? "&" : "?") + "action=availability&t=" + Date.now(), { signal: ctrl.signal });
+    const aliases = films.map(f => ({ id: filmKey(f), legacyKey: filmLegacyKey(f) }));
+    const query = new URLSearchParams({
+      action: "availability",
+      t: String(Date.now()),
+      filmAliases: JSON.stringify(aliases)
+    });
+    const res = await fetch(url + (url.includes("?") ? "&" : "?") + query.toString(), { signal: ctrl.signal, cache: "no-store" });
     clearTimeout(timer);
     const d = await res.json();
     if (d && d.ok) {
@@ -379,7 +402,8 @@ async function reserveSeats(form, film) {
       signal: ctrl.signal,
       body: JSON.stringify({
         action: "book",
-        film: filmKey(film),
+        film: filmLegacyKey(film),
+        filmId: filmKey(film),
         name: form.elements["name"].value,
         email: form.elements["email"].value,
         seats: form.elements["Numero di posti"].value,

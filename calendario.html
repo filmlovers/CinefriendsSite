@@ -11,6 +11,7 @@
   <meta name="robots" content="noindex">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <style>[hidden]{display:none!important}</style>
 </head>
 <body>
   <main style="min-height:100vh;display:grid;place-items:center;text-align:center;padding:30px;background:#242321;color:#f3f0e9">
@@ -19,11 +20,13 @@
       <h1 style="font:700 clamp(36px,6vw,60px) 'Playfair Display',serif;margin:0 0 14px">Aggiungi la serata<br><em style="color:#e56b45">al calendario.</em></h1>
       <p id="evento" style="color:#c6c1b8;font-size:14px;line-height:1.8"></p>
       <p id="stato" style="color:#c6c1b8;font-size:13px;line-height:1.7"></p>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+      <div id="azioni" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+        <a class="button button-light" id="aggiungi" href="#" hidden>Aggiungi al calendario <span>＋</span></a>
         <a class="button button-light" id="scarica" href="#" download="cinefriends.ics">Scarica il file (.ics) <span>↓</span></a>
         <a class="button button-outline" id="google" href="#" target="_blank" rel="noopener">Google Calendar <span>↗</span></a>
+        <a class="button button-outline" id="outlook" href="#" target="_blank" rel="noopener">Outlook <span>↗</span></a>
       </div>
-      <p style="color:#a6a199;font-size:11px;line-height:1.7;margin-top:22px">Il file .ics funziona con Apple Calendar, Outlook e gli altri calendari.<br>Include un promemoria il giorno prima e due ore prima.</p>
+      <p id="suggerimento" style="color:#a6a199;font-size:11px;line-height:1.7;margin:22px auto 0;max-width:420px"></p>
       <a class="button button-outline" href="index.html" style="margin-top:14px">Torna alla homepage</a>
     </div>
   </main>
@@ -31,19 +34,25 @@
     (function () {
       const q = new URLSearchParams(location.search);
       const t = q.get("t"), s = q.get("s"), e = q.get("e"), l = q.get("l") || "", d = q.get("d") || "";
+      const $ = id => document.getElementById(id);
       const ok = t && /^\d{8}T\d{6}Z$/.test(s || "") && /^\d{8}T\d{6}Z$/.test(e || "");
       if (!ok) {
-        document.getElementById("evento").textContent = "Link non valido: apri il link dall'email di conferma.";
-        document.getElementById("scarica").hidden = true;
-        document.getElementById("google").hidden = true;
+        $("evento").textContent = "Link non valido: apri il link dall'email di conferma.";
+        ["azioni", "suggerimento"].forEach(id => $(id).hidden = true);
         return;
       }
-      const fmt = x => new Date(x.replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/, "$1-$2-$3T$4:$5:$6Z"));
-      const start = fmt(s);
-      document.getElementById("evento").textContent = "Cinefriends: " + t + " · " +
+      const ua = navigator.userAgent;
+      const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      const isAndroid = /Android/i.test(ua);
+      const isMobile = isIOS || isAndroid;
+
+      const toDate = x => new Date(x.replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/, "$1-$2-$3T$4:$5:$6Z"));
+      const start = toDate(s), end = toDate(e);
+      $("evento").textContent = "Cinefriends: " + t + " · " +
         start.toLocaleString("it-IT", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Rome" }) +
         (l ? " · " + l : "");
-      const esc = x => x.replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+
+      const esc = x => x.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
       const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
       const ics = [
         "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Cinefriends//IT", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
@@ -54,14 +63,52 @@
         "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + esc("Tra due ore: " + t), "TRIGGER:-PT2H", "END:VALARM",
         "END:VEVENT", "END:VCALENDAR"
       ].join("\r\n");
-      const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.getElementById("scarica");
-      a.href = url;
-      a.download = "cinefriends-" + t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".ics";
-      document.getElementById("google").href = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      const fname = "cinefriends-" + t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".ics";
+      const blobUrl = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
+
+      // Link di Google Calendar e Outlook (funzionano su qualsiasi dispositivo)
+      $("google").href = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
         "&text=" + encodeURIComponent("Cinefriends: " + t) + "&dates=" + s + "/" + e +
         "&details=" + encodeURIComponent(d) + "&location=" + encodeURIComponent(l);
+      const iso = x => x.toISOString().replace(/\.\d{3}Z$/, "Z");
+      $("outlook").href = "https://outlook.live.com/calendar/0/deeplink/compose?path=" + encodeURIComponent("/calendar/action/compose") +
+        "&rru=addevent&subject=" + encodeURIComponent("Cinefriends: " + t) + "&startdt=" + encodeURIComponent(iso(start)) +
+        "&enddt=" + encodeURIComponent(iso(end)) + "&location=" + encodeURIComponent(l) + "&body=" + encodeURIComponent(d);
+
+      // Desktop: download classico del file .ics
+      $("scarica").href = blobUrl;
+      $("scarica").download = fname;
+
+      // Telefono: il download di file "blob" spesso non funziona (soprattutto su iPhone).
+      // Si usa il foglio di condivisione del telefono; se non c'è, su iPhone si apre il file come dato,
+      // su Android si scarica.
+      if (isMobile) {
+        $("scarica").hidden = true;
+        $("aggiungi").hidden = false;
+        $("aggiungi").addEventListener("click", async (ev) => {
+          ev.preventDefault();
+          try {
+            const file = new File([ics], fname, { type: "text/calendar" });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({ files: [file], title: "Cinefriends: " + t });
+              return;
+            }
+          } catch (err) {
+            if (err && err.name === "AbortError") return; // l'utente ha chiuso il foglio di condivisione
+          }
+          if (isIOS) {
+            location.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+          } else {
+            const a = document.createElement("a");
+            a.href = blobUrl; a.download = fname;
+            document.body.appendChild(a); a.click(); a.remove();
+          }
+        });
+      }
+      $("suggerimento").innerHTML = isMobile
+        ? "Tocca <strong>Aggiungi al calendario</strong> e scegli l'app Calendario. Se non succede nulla, apri questa pagina in " +
+          (isIOS ? "Safari" : "Chrome") + " (menu ⋯ → “Apri nel browser”) oppure usa Google Calendar o Outlook.<br>Il promemoria avvisa il giorno prima e due ore prima."
+        : "Il file .ics funziona con Apple Calendar, Outlook e gli altri calendari.<br>Include un promemoria il giorno prima e due ore prima.";
     })();
   </script>
 </body>

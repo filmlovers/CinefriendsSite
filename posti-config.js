@@ -3,5 +3,5 @@
 // (finisce con /exec). La guida è nel README, punto 8.
 // Se resta vuoto, il sito usa i posti scritti a mano in films.js (seats e booked).
 window.POSTI_CONFIG = {
-  url: "https://script.google.com/macros/s/AKfycbxtgTU5UtADa_sp43I9OgIUNkIzc4ElINk5X762fwfqZ6x_YiXP5cuKhfMjmlKhcM-nnA/exec"   // es. "https://script.google.com/macros/s/AKfycb.../exec"
+  url: "https://script.google.com/macros/s/AKfycbzJlI3mWaV8WJHftEBQ2-0EU2LXRQYqodlHbhDcwZIH52fDgf8z55LeAhVBYQpTiE5KyQ/exec"   // es. "https://script.google.com/macros/s/AKfycb.../exec"
 };

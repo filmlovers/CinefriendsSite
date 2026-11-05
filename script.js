@@ -62,32 +62,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("year").textContent = new Date().getFullYear();
   const toggle = document.querySelector(".menu-toggle");
   const nav = document.querySelector(".nav");
-  const header = document.querySelector(".site-header");
-
-  // Su mobile apre/chiude il menu; su desktop il pulsante resta nascosto via CSS.
-  if (toggle && nav) {
-    const closeMenu = () => {
-      nav.classList.remove("nav-open");
-      toggle.setAttribute("aria-expanded", "false");
-      toggle.setAttribute("aria-label", "Apri il menu");
-    };
-    toggle.addEventListener("click", () => {
-      const open = nav.classList.toggle("nav-open");
-      toggle.setAttribute("aria-expanded", String(open));
-      toggle.setAttribute("aria-label", open ? "Chiudi il menu" : "Apri il menu");
-    });
-    nav.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") closeMenu();
-    });
-  }
-
-  // L'header e' sempre sticky. La classe viene usata per la trasparenza desktop.
-  const updateHeader = () => {
-    if (header) header.classList.toggle("is-scrolled", window.scrollY > 8);
-  };
-  updateHeader();
-  window.addEventListener("scroll", updateHeader, { passive: true });
+  toggle.addEventListener("click", () => {
+    const open = nav.classList.toggle("nav-open");
+    toggle.setAttribute("aria-expanded", String(open));
+  });
+  nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => nav.classList.remove("nav-open")));
 });
  
 // Sezione "Proposte": carica Giscus solo se giscus-config.js è stato compilato.

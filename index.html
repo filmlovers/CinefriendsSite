@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Cinefriends: una serata, un film, tante idee da condividere. Scopri la programmazione e prenota il tuo posto.">
+  <title>Cinefriends — Il cinema da vivere insieme</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" href="assets/favicon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#e56b45">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Cinefriends, homepage"><span class="brand-mark">▶</span><span>CINE<span class="brand-light">FRIENDS</span></span></a>
+    <button class="menu-toggle" aria-label="Apri il menu" aria-expanded="false">☰</button>
+    <nav class="nav">
+      <a href="#home">Home</a><a href="#questa-settimana">Questa Settimana</a><a href="#programma">Programmazione</a><a href="#proposte">Proposte</a><a class="nav-cta" href="#prenota">Prenota un posto <span>↗</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-line"></span> IL TUO APPUNTAMENTO CON IL CINEMA</p>
+        <h1>Un film.<br><em> Mille</em> punti di vista.</h1>
+        <p class="hero-intro">Una sera a settimana ci incontriamo davanti a un grande film. Poi restiamo a parlarne, insieme.</p>
+        <div class="hero-buttons"><a class="button button-light" href="#questa-settimana">Scopri il film di questa settimana <span>↓</span></a><a class="button button-outline" href="#programma">Scopri i prossimi film <span>↓</span></a></div>
+        <div class="hero-note"><span class="note-dot"></span> UN APPUNTAMENTO OGNI SETTIMANA</div>
+      </div>
+      <div class="hero-art" aria-label="Illustrazione di una sala cinematografica">
+        <img class="hero-img" src="assets/centocelle.JPG" width="1014" height="570">
+        <div class="art-caption">SPEGNI IL MONDO.<br>ACCENDI LO SGUARDO.</div>
+      </div>
+    </section>
+
+    <section class="featured section-wrap" id="questa-settimana">
+      <div class="section-heading"><div><p class="eyebrow">IL FILM DELLA SETTIMANA</p><h2>Questa <em>settimana.</em></h2></div><span class="week-label">01 / SETTIMANA</span></div>
+      <div class="featured-card">
+        <div class="poster poster-featured" id="featured-poster"><span class="poster-kicker">IL FILM DELLA SETTIMANA</span><span class="poster-title" id="featured-poster-title">LA VITA<br>È BELLA</span><span class="poster-credit">UNA STORIA DA CONDIVIDERE</span></div>
+        <div class="film-details">
+          <p class="film-tag" id="featured-genre">DRAMMATICO · 1997</p>
+          <h3 id="featured-title">La vita è bella</h3>
+          <p class="film-description" id="featured-description">Una storia capace di trovare la luce anche nei momenti più difficili. Un film da riscoprire sul grande schermo e da raccontarsi dopo i titoli di coda.</p>
+          <div class="event-facts">
+            <div><span class="fact-icon">◷</span><div><small>QUANDO</small><strong id="featured-date">Giovedì 12 novembre</strong><span id="featured-time">Ore 21:00</span></div></div>
+            <div><span class="fact-icon">⌖</span><div><small>DOVE</small><strong id="featured-venue">Sala delle Idee</strong><span id="featured-address">Via del Cinema 12, Roma</span></div></div>
+          </div>
+          <a class="button button-dark" href="#prenota">Prenota il tuo posto <span>↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="schedule-section" id="programma">
+      <div class="section-wrap">
+        <div class="section-heading"><div><p class="eyebrow">SEGNALO IN AGENDA</p><h2>La <em>programmazione.</em></h2></div><p class="heading-aside">Un nuovo film ogni settimana.<br>La curiosità è l'unica regola.</p></div>
+        <div class="schedule-list" id="schedule-list"></div>
+        <!--p class="schedule-footnote">Programma aggiornabile: date, film e dettagli si modificano nel file <code>films.js</code>.</p-->
+      </div>
+    </section>
+
+    <section class="proposals-section" id="proposte">
+      <div class="section-wrap">
+        <div class="section-heading"><div><p class="eyebrow">DICCI COSA VUOI VEDERE</p><h2>Le tue <em>proposte.</em></h2></div><p class="heading-aside">Suggerisci un film, vota le idee degli altri<br>e continua la discussione dopo i titoli di coda.</p></div>
+        <div class="proposals-grid">
+          <div class="proposals-copy">
+            <h3>Come partecipare</h3>
+            <ol class="proposals-steps">
+              <li><strong>Crea un account GitHub</strong><span>È gratuito e richiede un minuto. <a href="https://github.com/signup" target="_blank" rel="noopener">Registrati su GitHub ↗</a></span></li>
+              <li><strong>Accedi dal riquadro dei commenti</strong><span>Premi “Sign in with GitHub” e autorizza Giscus: non vediamo la tua password.</span></li>
+              <li><strong>Scrivi la tua proposta</strong><span>Titolo del film e due righe sul perché. Puoi anche mettere un 👍 alle idee che ti piacciono.</span></li>
+            </ol>
+            <p class="proposals-note">Hai già un account? Vai direttamente ai commenti qui accanto.</p>
+          </div>
+          <div class="proposals-box">
+            <div id="giscus-container" class="giscus-container" aria-live="polite"></div>
+            <p id="giscus-fallback" class="giscus-fallback" hidden>I commenti saranno disponibili a breve. Intanto puoi scriverci le tue proposte nelle note del modulo di prenotazione.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="booking-section" id="prenota">
+      <div class="section-wrap booking-grid">
+        <div class="booking-copy"><p class="eyebrow">IL TUO POSTO TI ASPETTA</p><h2>Ci vediamo<br><em>sul divano.</em></h2><p>La partecipazione è semplice: compila il modulo e prenota il tuo posto sul divano (o al limite per terra).</p><div class="booking-stamp">POSTI<br><strong>LIMITATI</strong><span>♥</span></div></div>
+        <form class="booking-form" id="booking-form" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="">
+          <input type="hidden" name="subject" value="Nuova prenotazione Cinefriends">
+          <input type="hidden" name="from_name" value="Cinefriends">
+          <input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+          <div class="form-title"><span>01 — PRENOTAZIONE</span><span class="form-required">* CAMPi OBBLIGATORI</span></div>
+          <label for="name">Nome e cognome *</label><input id="name" name="name" type="text" placeholder="Come ti chiami?" required>
+          <div class="form-row"><div><label for="email">Email *</label><input id="email" name="email" type="email" placeholder="nome@email.it" required></div><div><label for="people">Numero di posti *</label><select id="people" name="Numero di posti" required><option value="1">1 posto</option><option value="2">2 posti</option><option value="3">3 posti</option><option value="4">4 posti</option><option value="5">5 posti</option></select></div></div>
+          <label for="attendance">Quando vieni? *</label>
+          <select id="attendance" name="Partecipazione" required>
+            <option value="Cena e proiezione">A cena e poi alla proiezione</option>
+            <option value="Dopo cena (solo proiezione)">Dopo cena, direttamente alla proiezione</option>
+          </select>
+          <label for="film">Film per cui prenoti *</label><select id="film" name="Film" required></select>
+          <div class="seats-counter" id="seats-counter" aria-live="polite"></div>
+          <label for="notes">Note <span class="optional">(facoltative)</span></label><textarea id="notes" name="Note" rows="3" placeholder="Esigenze particolari o un messaggio..."></textarea>
+          <label class="privacy"><input type="checkbox" required> <span>Acconsento a essere ricontattato/a per gestire questa prenotazione. *</span></label>
+          <button class="button button-dark submit-button" type="submit">Invia la prenotazione <span>↗</span></button>
+          <p class="form-status" id="form-status" role="status" aria-live="polite" hidden></p>
+          <p class="form-small">La prenotazione sarà effettiva dopo la conferma dell'organizzazione.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><a class="brand brand-footer" href="#home"><span class="brand-mark">▶</span><span>CINE<span class="brand-light">FRIENDS</span></span></a><p>Il cinema è più bello quando è condiviso.</p><a href="#home" class="back-top">TORNA SU ↑</a><small>© <span id="year"></span> Cinefriends · Tutti i diritti riservati</small></footer>
+  <script src="films.js"></script><script src="giscus-config.js"></script><script src="prenotazioni-config.js"></script><script src="conferma-config.js"></script><script src="posti-config.js"></script><script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aggiungi al calendario — Cinefriends</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#e56b45">
+  <meta name="robots" content="noindex">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main style="min-height:100vh;display:grid;place-items:center;text-align:center;padding:30px;background:#242321;color:#f3f0e9">
+    <div>
+      <p class="eyebrow">CINEFRIENDS</p>
+      <h1 style="font:700 clamp(36px,6vw,60px) 'Playfair Display',serif;margin:0 0 14px">Aggiungi la serata<br><em style="color:#e56b45">al calendario.</em></h1>
+      <p id="evento" style="color:#c6c1b8;font-size:14px;line-height:1.8"></p>
+      <p id="stato" style="color:#c6c1b8;font-size:13px;line-height:1.7"></p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+        <a class="button button-light" id="scarica" href="#" download="cinefriends.ics">Scarica il file (.ics) <span>↓</span></a>
+        <a class="button button-outline" id="google" href="#" target="_blank" rel="noopener">Google Calendar <span>↗</span></a>
+      </div>
+      <p style="color:#a6a199;font-size:11px;line-height:1.7;margin-top:22px">Il file .ics funziona con Apple Calendar, Outlook e gli altri calendari.<br>Include un promemoria il giorno prima e due ore prima.</p>
+      <a class="button button-outline" href="index.html" style="margin-top:14px">Torna alla homepage</a>
+    </div>
+  </main>
+  <script>
+    (function () {
+      const q = new URLSearchParams(location.search);
+      const t = q.get("t"), s = q.get("s"), e = q.get("e"), l = q.get("l") || "", d = q.get("d") || "";
+      const ok = t && /^\d{8}T\d{6}Z$/.test(s || "") && /^\d{8}T\d{6}Z$/.test(e || "");
+      if (!ok) {
+        document.getElementById("evento").textContent = "Link non valido: apri il link dall'email di conferma.";
+        document.getElementById("scarica").hidden = true;
+        document.getElementById("google").hidden = true;
+        return;
+      }
+      const fmt = x => new Date(x.replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/, "$1-$2-$3T$4:$5:$6Z"));
+      const start = fmt(s);
+      document.getElementById("evento").textContent = "Cinefriends: " + t + " · " +
+        start.toLocaleString("it-IT", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Rome" }) +
+        (l ? " · " + l : "");
+      const esc = x => x.replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+      const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+      const ics = [
+        "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Cinefriends//IT", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+        "BEGIN:VEVENT", "UID:" + s + "-" + Math.abs([...t].reduce((a, c) => a * 31 + c.charCodeAt(0) | 0, 7)) + "@cinefriends",
+        "DTSTAMP:" + now, "DTSTART:" + s, "DTEND:" + e,
+        "SUMMARY:" + esc("Cinefriends: " + t), "LOCATION:" + esc(l), "DESCRIPTION:" + esc(d),
+        "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + esc("Domani: " + t), "TRIGGER:-P1D", "END:VALARM",
+        "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + esc("Tra due ore: " + t), "TRIGGER:-PT2H", "END:VALARM",
+        "END:VEVENT", "END:VCALENDAR"
+      ].join("\r\n");
+      const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.getElementById("scarica");
+      a.href = url;
+      a.download = "cinefriends-" + t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".ics";
+      document.getElementById("google").href = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+        "&text=" + encodeURIComponent("Cinefriends: " + t) + "&dates=" + s + "/" + e +
+        "&details=" + encodeURIComponent(d) + "&location=" + encodeURIComponent(l);
+    })();
+  </script>
+</body>
+</html>

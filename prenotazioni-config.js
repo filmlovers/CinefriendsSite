@@ -4,6 +4,6 @@
 // 3) (Facoltativo) "fallbackEmail": se l'invio fallisce, si apre l'app di posta con la prenotazione
 //    già scritta e indirizzata a questo indirizzo. Attenzione: sarà visibile a chiunque legga il codice.
 window.BOOKING_CONFIG = {
-  accessKey: "af138c67-6dd5-4edc-ba18-b5936f911cb2",
-  fallbackEmail: "lorenzocironeavezzano@gmail.com"
+  accessKey: "a15a487e-c09e-4ddf-a6fa-71b1a418a8a0",
+  fallbackEmail: "cinefriends.filmlovers@gmail.com"
 };

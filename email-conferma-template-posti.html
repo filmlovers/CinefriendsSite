@@ -1,0 +1,32 @@
+<!--
+EMAILJS — TEMPLATE DI CONFERMA AGGIORNATO
+Nel pannello EmailJS apri il template esistente, passa al Code Editor e sostituisci
+il suo contenuto con il codice HTML qui sotto.
+Variabili richieste: to_email, to_name, film, date, time, venue, address, seats,
+seat_selection, attendance, google_calendar_url, ics_page_url.
+-->
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;color:#20201e">
+  <div style="background:#242321;color:#f6f0e7;padding:26px 28px">
+    <div style="font-size:12px;letter-spacing:2px;color:#e56b45;font-weight:bold">CINEFRIENDS</div>
+    <h1 style="font-family:Georgia,serif;font-size:28px;margin:10px 0 0">Ci vediamo sul divano, {{to_name}}!</h1>
+  </div>
+  <div style="background:#f3f0e9;padding:26px 28px;font-size:14px;line-height:1.7">
+    <p>Abbiamo ricevuto la tua richiesta di prenotazione. L'organizzazione ti scriverà per confermare il posto.</p>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;margin:14px 0">
+      <tr><td style="padding:6px 0;color:#77736d">Film</td><td style="padding:6px 0"><strong>{{film}}</strong></td></tr>
+      <tr><td style="padding:6px 0;color:#77736d">Quando</td><td style="padding:6px 0"><strong>{{date}}</strong>, {{time}}</td></tr>
+      <tr><td style="padding:6px 0;color:#77736d">Durata</td><td style="padding:6px 0">{{duration}}</td></tr>
+      <tr><td style="padding:6px 0;color:#77736d">Dove</td><td style="padding:6px 0"><strong>{{venue}}</strong><br>{{address}}</td></tr>
+      <tr><td style="padding:6px 0;color:#77736d">Numero di posti</td><td style="padding:6px 0">{{seats}}</td></tr>
+      <tr><td style="padding:6px 0;color:#77736d">Posti assegnati</td><td style="padding:6px 0"><strong>{{seat_selection}}</strong></td></tr>
+      <tr><td style="padding:6px 0;color:#77736d">Partecipazione</td><td style="padding:6px 0">{{attendance}}</td></tr>
+    </table>
+    <p style="margin:22px 0 10px"><strong>Non dimenticartelo: aggiungilo al calendario</strong></p>
+    <p style="margin:0">
+      <a href="{{google_calendar_url}}" style="display:inline-block;background:#20201e;color:#ffffff;text-decoration:none;padding:13px 18px;font-size:13px;font-weight:bold;margin:0 8px 8px 0">Google Calendar ↗</a>
+      <a href="{{ics_page_url}}" style="display:inline-block;border:1px solid #20201e;color:#20201e;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:bold;margin:0 0 8px 0">Apple / Outlook (.ics) ↗</a>
+    </p>
+    <p style="font-size:12px;color:#77736d">Con il file .ics il calendario ti avvisa il giorno prima e due ore prima.</p>
+  </div>
+  <div style="padding:14px 28px;font-size:11px;color:#898278">Hai ricevuto questa email perché hai prenotato un posto su Cinefriends.</div>
+</div>

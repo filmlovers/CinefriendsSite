@@ -1,28 +1,24 @@
-###CINEFREINDS — SITO WEB STATICO
 
-FEATURES: Homepage, Film della Settimana con Recap Posti, Programmazione Mensile, Sezione Proposte e Commenti, Form di prenotazione con selezione grafica dei posti. 
 
-BACKEND: DB su google sheet, invio email di conferma all'admin con Web3Forms, invio email di conferma all'utente con EmailJS (con evento a calendario).
+# **CINEFRIENDS — SITO WEB STATICO**
+
+**FEATURES**: Homepage, Film della Settimana con Recap Posti, Programmazione Mensile, Sezione Proposte e Commenti, Form di prenotazione con selezione grafica dei posti. 
+
+**BACKEND**: DB su google sheet, invio email di conferma all'admin con Web3Forms, invio email di conferma all'utente con EmailJS (con evento a calendario).
 Attenzione!!! I piani sono gratuiti, si hanno 200 invii di email di conferma al mese (200 admin, 200 utente). Evitare Prenotazioni a caso.
 
-CONTENUTO
-- index.html: homepage, film della settimana, programmazione e modulo prenotazioni.
-- styles.css: grafica responsive per computer e smartphone.
-- films.js: elenco dei film e dati da aggiornare ogni settimana.
-- script.js: visualizzazione automatica di film e programmazione.
-- grazie.html: pagina mostrata dopo l'invio del modulo.
 
+## **ISTRUZIONI**
 
-ISTRUZIONI
-1. PERSONALIZZARE I FILM
+1. *PERSONALIZZARE I FILM*
 Apri films.js con un editor di testo. Modifica i film, le date, l'orario, la sala e l'indirizzo.
 Il primo film nell'elenco è quello mostrato in homepage. Aggiungi o rimuovi oggetti seguendo la stessa struttura.
 I poster sono grafiche tipografiche originali, non locandine ufficiali. Puoi sostituirli con immagini autorizzate.
 
-2. IMMAGINE HOMEPAGE
+2. *IMMAGINE HOMEPAGE*
 L'illustrazione in homepage è assets/hero-cinefriends.svg. Per usare una foto, salvala in assets/ e cambia il percorso nel tag <img class="hero-img"> di index.html.
 
-3. ATTIVARE LE PRENOTAZIONI (WEB3FORMS)
+3. *ATTIVARE LE PRENOTAZIONI (WEB3FORMS)*
 Il modulo usa Web3Forms (piano gratuito: 250 invii al mese; verifica i limiti aggiornati su web3forms.com/pricing).
 - Vai su https://web3forms.com, inserisci l'email che riceverà le prenotazioni e copia la "Access Key" che ti arriva.
 - Apri prenotazioni-config.js e incolla la chiave in accessKey. La chiave serve solo a inviare i moduli e può stare nel sito pubblico.
@@ -31,7 +27,7 @@ Il modulo usa Web3Forms (piano gratuito: 250 invii al mese; verifica i limiti ag
 - Più destinatari: nel piano gratuito la chiave ha una sola email. Per avvisare due persone usa una regola di inoltro automatico nella casella che riceve le prenotazioni.
 Nota privacy: il modulo raccoglie nome, email e numero di posti. Inserisci sul sito un'informativa privacy adeguata al tuo caso e raccogli solo i dati necessari. Il testo di consenso incluso è un promemoria essenziale, non sostituisce un'informativa GDPR completa.
 
-4. PUBBLICARE GRATIS CON GITHUB PAGES
+*4. PUBBLICARE GRATIS CON GITHUB PAGES*
 - Crea un account gratuito su GitHub.
 - Crea un nuovo repository pubblico, ad esempio "cineforum".
 - Carica tutti i file mantenendo la struttura.
@@ -46,7 +42,7 @@ NOTE
 Il sito è statico: non serve acquistare un dominio o un hosting per iniziare. Per le prenotazioni serve inserire la chiave Web3Forms in prenotazioni-config.js come descritto sopra.
 
 
-5. ATTIVARE LA SEZIONE PROPOSTE (COMMENTI CON GISCUS)
+5. *ATTIVARE LA SEZIONE PROPOSTE (COMMENTI CON GISCUS)*
 Giscus salva i commenti nelle "Discussions" di un repository GitHub pubblico. I visitatori accedono (o si registrano) con GitHub.
 - Usa il repository pubblico del sito. In Settings > General > Features attiva "Discussions".
 - Nella tab Discussions crea una categoria "Proposte" di tipo "Announcements" (solo i maintainer creano discussioni, tutti commentano).
@@ -56,7 +52,7 @@ Giscus salva i commenti nelle "Discussions" di un repository GitHub pubblico. I 
 - Pubblica: i commenti compaiono nella sezione Proposte. Finché il file è vuoto, il sito mostra un avviso.
 Nota: il sito non può avere un proprio modulo di registrazione GitHub. La sezione spiega come creare l'account (https://github.com/signup) e il riquadro dei commenti mostra il pulsante "Sign in with GitHub".
 
-6. EMAIL DI CONFERMA CON PROMEMORIA PER IL CALENDARIO (EMAILJS)
+6. *EMAIL DI CONFERMA CON PROMEMORIA PER IL CALENDARIO (EMAILJS)*
 Dopo una prenotazione riuscita, chi ha prenotato riceve un'email con i pulsanti "Google Calendar" e "Apple / Outlook (.ics)".
 EmailJS ha un piano gratuito (circa 200 richieste al mese: verifica i limiti aggiornati su emailjs.com/pricing).
 - Crea un account su https://www.emailjs.com e collega la tua casella in "Email Services" (es. Gmail): annota il Service ID.
@@ -68,7 +64,7 @@ Se conferma-config.js è vuoto, l'email non viene inviata e le prenotazioni funz
 Date: l'orario del calendario si legge da "date" e "time" in films.js (es. "Lunedì 9 Novembre", "Ore 21:00"). Se vuoi essere preciso, aggiungi al film start: "2026-11-09T21:00" (e duration: 150 per la durata in minuti).
 Il file calendario.html genera il promemoria (.ics) con avvisi il giorno prima e due ore prima.
 
-7. POSTI IN AUTOMATICO CON GOOGLE SHEETS
+7. *POSTI IN AUTOMATICO CON GOOGLE SHEETS*
 Ogni prenotazione viene scritta in un foglio Google e il contatore dei posti si aggiorna da solo. Il controllo dei posti avviene sul foglio, quindi non si può superare la capienza nemmeno con richieste simultanee. Ogni richiesta conta subito, senza conferma manuale.
 - Crea un foglio Google (sheets.new). Il foglio "Prenotazioni" con le colonne si crea da solo alla prima richiesta.
 - Nel foglio: Estensioni > Apps Script. Cancella il codice di esempio, incolla il contenuto di google-sheets/Code.gs e salva.

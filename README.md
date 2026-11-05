@@ -61,16 +61,7 @@ Se conferma-config.js è vuoto, l'email non viene inviata e le prenotazioni funz
 Date: l'orario del calendario si legge da "date" e "time" in films.js (es. "Lunedì 9 Novembre", "Ore 21:00"). Se vuoi essere preciso, aggiungi al film start: "2026-11-09T21:00" (e duration: 150 per la durata in minuti).
 Il file calendario.html genera il promemoria (.ics) con avvisi il giorno prima e due ore prima.
 
-
-7. POSTI DISPONIBILI (CONTATORE NEL MODULO)
-Ogni serata ha 7 posti (modificabile). Il sito non può contare da solo le prenotazioni: aggiorni tu i posti già occupati in films.js.
-Per ogni film puoi aggiungere due righe (se mancano, valgono 7 posti totali e 0 occupati):
-    seats: 7,    // posti totali della serata
-    booked: 3,   // posti già confermati: aggiornalo quando confermi una prenotazione
-Il modulo mostra i posti rimasti, limita il numero selezionabile e, a 0 posti, disabilita il film e il pulsante.
-Nota: il limite vale per il visitatore che ha la pagina aperta; la conferma finale resta sempre tua.
-
-8. POSTI IN AUTOMATICO CON GOOGLE SHEETS (FACOLTATIVO)
+7. POSTI IN AUTOMATICO CON GOOGLE SHEETS (FACOLTATIVO)
 Ogni prenotazione viene scritta in un foglio Google e il contatore dei posti si aggiorna da solo. Il controllo dei posti avviene sul foglio, quindi non si può superare la capienza nemmeno con richieste simultanee. Ogni richiesta conta subito, senza conferma manuale.
 - Crea un foglio Google (sheets.new). Il foglio "Prenotazioni" con le colonne si crea da solo alla prima richiesta.
 - Nel foglio: Estensioni > Apps Script. Cancella il codice di esempio, incolla il contenuto di google-sheets/Code.gs e salva.

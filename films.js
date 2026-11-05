@@ -1,10 +1,16 @@
 // MODIFICA SOLO QUESTO FILE PER AGGIORNARE FILM, DURATE (IN MINUTI), DATE, ORARI E LUOGHI.
-// Ogni film deve avere duration: <numero di minuti>. Tutte le schermate e le email leggono questo valore.
+// id: identificativo stabile della PROIEZIONE. Non cambiarlo se modifichi titolo o data.
+// Per una nuova proiezione assegna sempre un id nuovo e univoco.
+// legacyKey: riferimento facoltativo alle vecchie righe Google Sheets create prima degli ID.
+// Se cambi titolo/data a una proiezione già presente nel vecchio foglio, NON modificare legacyKey.
+// duration: numero di minuti (es. 103, senza virgolette).
 // Il primo elemento è il film in evidenza sulla homepage.
 const films = [
   {
+    id: "cf-proj-001",
+    legacyKey: "Fight Club — Lunedì 2 Novembre",
     title: "Fight Club",
-    duration: 139, // minuti
+    duration: 139,
     posterTitle: "FIGHT<br>CLUB",
     poster: "assets/locandine/fight_club.jpg",
     genre: "Azione · 1999",
@@ -16,8 +22,10 @@ const films = [
     color: "terracotta"
   },
   {
+    id: "cf-proj-002",
+    legacyKey: "Pulp Fiction — Lunedì 9 Novembre",
     title: "Pulp Fiction",
-    duration: 154, // minuti
+    duration: 154,
     posterTitle: "PULP<br>FICTION",
     poster: "assets/locandine/pulp_fiction.jpg",
     genre: "Giallo/Thriller · 1994",
@@ -29,8 +37,10 @@ const films = [
     color: "terracotta"
   },
   {
+    id: "cf-proj-003",
+    legacyKey: "Il Favoloso Mondo di Amélie — Lunedì 16 Novembre",
     title: "Il Favoloso Mondo di Amélie",
-    duration: 122, // minuti
+    duration: 122,
     posterTitle: "IL FAVOLOSO<br>MONDO DI AMÉLIE",
     poster: "assets/locandine/amelie.jpg",
     genre: "Commedia · 2001",
@@ -42,8 +52,10 @@ const films = [
     color: "plum"
   },
   {
+    id: "cf-proj-004",
+    legacyKey: "Nuovo Cinema Paradiso — Lunedì 23 Novembre",
     title: "Nuovo Cinema Paradiso",
-    duration: 155, // minuti
+    duration: 155,
     posterTitle: "NUOVO CINEMA<br>PARADISO",
     poster: "assets/locandine/cinema_paradiso.jpg",
     genre: "Drammatico · 1988",
@@ -55,8 +67,10 @@ const films = [
     color: "olive"
   },
   {
+    id: "cf-proj-005",
+    legacyKey: "The Truman Show — Lunedì 30 Novembre",
     title: "The Truman Show",
-    duration: 103, // minuti
+    duration: 103,
     posterTitle: "THE TRUMAN<br>SHOW",
     poster: "assets/locandine/truman_show.jpg",
     genre: "Fantascienza · 1998",
@@ -68,3 +82,13 @@ const films = [
     color: "blue"
   }
 ];
+
+// Controlli rapidi in console: gli ID devono esserci ed essere tutti diversi.
+(() => {
+  const ids = films.map(film => String(film.id || '').trim());
+  const missing = films.filter(film => !String(film.id || '').trim());
+  const duplicates = ids.filter((id, index) => id && ids.indexOf(id) !== index);
+  if (missing.length || duplicates.length) {
+    console.error('Cinefriends: ogni proiezione deve avere un id univoco.', { missing, duplicates });
+  }
+})();

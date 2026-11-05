@@ -16,6 +16,7 @@
     { id: "sofa-4", label: "Divano 4", short: "D4", area: "sofa" }
   ];
   const SEAT_BY_ID = Object.fromEntries(SEATS.map(seat => [seat.id, seat]));
+
   // Carica il foglio stile accanto a questo script.
   const currentScript = document.currentScript;
   if (currentScript && currentScript.src) {
@@ -34,12 +35,16 @@
     map: null,
     selectedNamesInput: null,
     selectedIdsInput: null,
+    selectedFilmIdInput: null,
+    selectedDurationInput: null,
     pickerStatus: null,
     selectedCount: null,
     weeklyDetails: null
   };
 
-  const keyFor = film => `${film.title} — ${film.date}`;
+  const legacyKeyFor = film => String(film.legacyKey || `${film.title} — ${film.date}`).trim();
+  const keyFor = film => String(film.id || legacyKeyFor(film)).trim();
+  const filmAliases = () => films.map(film => ({ id: keyFor(film), legacyKey: legacyKeyFor(film) }));
   const filmLabel = id => SEAT_BY_ID[id] ? SEAT_BY_ID[id].label : id;
   const selectedFilm = () => {
     const select = document.getElementById("film");
@@ -98,6 +103,9 @@
     const ids = state.selected.join(",");
     if (state.selectedNamesInput) state.selectedNamesInput.value = names;
     if (state.selectedIdsInput) state.selectedIdsInput.value = ids;
+    const film = selectedFilm();
+    if (state.selectedFilmIdInput) state.selectedFilmIdInput.value = film ? keyFor(film) : "";
+    if (state.selectedDurationInput) state.selectedDurationInput.value = film && Number(film.duration) > 0 ? String(Number(film.duration)) : "";
   }
 
   function renderBookingPicker() {
@@ -183,25 +191,6 @@
     map.innerHTML = renderMapMarkup(film, [], false);
   }
 
-  function setupFilmDurations() {
-    const featuredTag = document.getElementById("featured-genre");
-    const first = films[0];
-    if (featuredTag && first && Number(first.duration)) {
-      const duration = document.createElement("span");
-      duration.className = "cf-duration cf-featured-duration";
-      duration.textContent = `Durata · ${formatDuration(first.duration)}`;
-      featuredTag.insertAdjacentElement("afterend", duration);
-    }
-    document.querySelectorAll(".schedule-item").forEach((row, index) => {
-      const film = films[index];
-      const target = row.querySelector(".schedule-film");
-      if (!film || !target || !Number(film.duration)) return;
-      const duration = document.createElement("small");
-      duration.className = "cf-duration cf-schedule-duration";
-      duration.textContent = `Durata · ${formatDuration(film.duration)}`;
-      target.appendChild(duration);
-    });
-  }
 
   function formatDuration(value) {
     const minutes = Math.max(0, Number(value) || 0);
@@ -238,6 +227,18 @@
     state.selectedIdsInput.id = "cf-selected-seat-ids";
     form.appendChild(state.selectedIdsInput);
 
+    state.selectedFilmIdInput = document.createElement("input");
+    state.selectedFilmIdInput.type = "hidden";
+    state.selectedFilmIdInput.name = "ID proiezione";
+    state.selectedFilmIdInput.id = "cf-film-id";
+    form.appendChild(state.selectedFilmIdInput);
+
+    state.selectedDurationInput = document.createElement("input");
+    state.selectedDurationInput.type = "hidden";
+    state.selectedDurationInput.name = "Durata film (minuti)";
+    state.selectedDurationInput.id = "cf-film-duration";
+    form.appendChild(state.selectedDurationInput);
+
     film.addEventListener("change", renderBookingPicker);
     people.addEventListener("change", renderBookingPicker);
     renderBookingPicker();
@@ -270,7 +271,12 @@
     try {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 8000);
-      const response = await fetch(url + (url.includes("?") ? "&" : "?") + "action=availability&t=" + Date.now(), {
+      const query = new URLSearchParams({
+        action: "availability",
+        t: String(Date.now()),
+        filmAliases: JSON.stringify(filmAliases())
+      });
+      const response = await fetch(url + (url.includes("?") ? "&" : "?") + query.toString(), {
         signal: controller.signal,
         cache: "no-store"
       });
@@ -325,7 +331,8 @@
         signal: controller.signal,
         body: JSON.stringify({
           action: "book",
-          film: keyFor(film),
+          film: legacyKeyFor(film),
+          filmId: keyFor(film),
           name: form.elements["name"].value,
           email: form.elements["email"].value,
           seats: quantity,
@@ -389,6 +396,7 @@
             to_email: form.elements["email"].value,
             to_name: form.elements["name"].value,
             film: film.title,
+            film_id: keyFor(film),
             date: film.date,
             time: film.time,
             venue: film.venue,
@@ -534,7 +542,6 @@
   document.addEventListener("DOMContentLoaded", () => {
     setupSeatInterface();
     setupWeeklyAccordion();
-    setupFilmDurations();
     renderBookingPicker();
     renderWeeklyAvailability();
   });

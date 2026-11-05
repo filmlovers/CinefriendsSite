@@ -16,25 +16,6 @@
     { id: "sofa-4", label: "Divano 4", short: "D4", area: "sofa" }
   ];
   const SEAT_BY_ID = Object.fromEntries(SEATS.map(seat => [seat.id, seat]));
-  const DURATIONS = {
-    "Fight Club": 139,
-    "Pulp Fiction": 154,
-    "Il Favoloso Mondo di Amélie": 122,
-    "Nuovo Cinema Paradiso": 155,
-    "The Truman Show": 103
-  };
-
-  // Imposta le durate in minuti senza sovrascrivere eventuali valori già personalizzati in films.js.
-  try {
-    films.forEach(film => {
-      if (!Number.isFinite(Number(film.duration)) && DURATIONS[film.title]) {
-        film.duration = DURATIONS[film.title];
-      }
-    });
-  } catch (error) {
-    console.warn("Durate Cinefriends non applicate", error);
-  }
-
   // Carica il foglio stile accanto a questo script.
   const currentScript = document.currentScript;
   if (currentScript && currentScript.src) {
@@ -415,7 +396,7 @@
             seats: form.elements["Numero di posti"].value,
             seat_selection: form.elements["Posti scelti"].value,
             attendance: form.elements["Partecipazione"].value,
-            duration: formatDuration(film.duration || 150),
+            duration: Number(film.duration) > 0 ? formatDuration(film.duration) : "Non specificata",
             google_calendar_url: google,
             ics_page_url: ics
           }

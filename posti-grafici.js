@@ -32,8 +32,6 @@
     bookedByFilm: {},
     availabilityLoaded: false,
     availabilityLoading: Boolean((window.POSTI_CONFIG || {}).url),
-    availabilityError: "",
-    refreshInProgress: false,
     map: null,
     selectedNamesInput: null,
     selectedIdsInput: null,
@@ -59,36 +57,24 @@
     return SEATS.slice(0, count).map(seat => seat.id);
   }
 
-  function databaseConfigured() {
-    return Boolean(String((window.POSTI_CONFIG || {}).url || "").trim());
-  }
-
-  function availabilityVerified() {
-    return !databaseConfigured() || state.availabilityLoaded;
-  }
-
   function bookedIdsFor(film) {
     if (!film) return [];
     const key = keyFor(film);
     const ids = state.bookedByFilm[key];
     if (Array.isArray(ids)) return [...new Set(ids.filter(id => SEAT_BY_ID[id]))];
-    // I dati manuali in films.js sono usati solo se Google Sheets non è configurato.
-    return databaseConfigured() ? [] : fallbackBookedIds(film);
+    return fallbackBookedIds(film);
   }
 
   function renderMapMarkup(film, selectedIds = [], interactive = false) {
-    const verified = availabilityVerified();
     const booked = new Set(bookedIdsFor(film));
     const selected = new Set(selectedIds);
     const makeSeat = seat => {
-      const isUnknown = !verified;
-      const isBooked = !isUnknown && booked.has(seat.id);
-      const isSelected = !isUnknown && selected.has(seat.id);
-      const statusClass = isUnknown ? "is-unknown" : isBooked ? "is-booked" : isSelected ? "is-selected" : "is-free";
-      const disabled = !interactive || isUnknown || isBooked ? "disabled" : "";
+      const isBooked = booked.has(seat.id);
+      const isSelected = selected.has(seat.id);
+      const statusClass = isBooked ? "is-booked" : isSelected ? "is-selected" : "is-free";
+      const disabled = !interactive || isBooked ? "disabled" : "";
       const pressed = isSelected ? "true" : "false";
-      const label = isUnknown ? "disponibilità non verificata" : isBooked ? "occupato" : isSelected ? "selezionato" : "libero";
-      return `<button type="button" class="cf-seat ${seat.area === "sofa" ? "cf-seat-sofa" : "cf-seat-floor"} ${statusClass}" data-seat-id="${seat.id}" aria-pressed="${pressed}" aria-label="${seat.label}: ${label}" ${disabled}><span>${seat.short}</span></button>`;
+      return `<button type="button" class="cf-seat ${seat.area === "sofa" ? "cf-seat-sofa" : "cf-seat-floor"} ${statusClass}" data-seat-id="${seat.id}" aria-pressed="${pressed}" aria-label="${seat.label}: ${isBooked ? "occupato" : isSelected ? "selezionato" : "libero"}" ${disabled}><span>${seat.short}</span></button>`;
     };
     const floor = SEATS.filter(seat => seat.area === "floor").map(makeSeat).join("");
     const sofa = SEATS.filter(seat => seat.area === "sofa").map(makeSeat).join("");
@@ -105,11 +91,9 @@
         <div class="cf-sofa-base" aria-hidden="true"></div>
       </div>
       <div class="cf-seat-legend" aria-label="Legenda">
-        ${verified
-          ? `<span><i class="cf-legend-dot cf-legend-free"></i> Libero</span>
-             ${interactive ? `<span><i class="cf-legend-dot cf-legend-selected"></i> Selezionato</span>` : ""}
-             <span><i class="cf-legend-dot cf-legend-booked"></i> Occupato</span>`
-          : `<span><i class="cf-legend-dot cf-legend-unknown"></i> Disponibilità non verificata</span>`}
+        <span><i class="cf-legend-dot cf-legend-free"></i> Libero</span>
+        <span><i class="cf-legend-dot cf-legend-selected"></i> Selezionato</span>
+        <span><i class="cf-legend-dot cf-legend-booked"></i> Occupato</span>
       </div>
     </div>`;
   }
@@ -134,7 +118,6 @@
     }
 
     const booked = new Set(bookedIdsFor(film));
-    if (!availabilityVerified()) state.selected = [];
     state.selected = state.selected.filter(id => !booked.has(id));
     const people = document.getElementById("people");
     const quantity = Math.max(1, Number(people && people.value) || 1);
@@ -155,17 +138,9 @@
     });
 
     const selectedCount = state.selected.length;
-    const verified = availabilityVerified();
-    if (state.selectedCount) state.selectedCount.textContent = verified
-      ? `${selectedCount} / ${quantity} selezionati`
-      : "Disponibilità da verificare";
+    if (state.selectedCount) state.selectedCount.textContent = `${selectedCount} / ${quantity} selezionati`;
     if (state.pickerStatus) {
-      if (!verified) {
-        state.pickerStatus.textContent = state.availabilityLoading
-          ? "Sto verificando i posti su Google Sheets…"
-          : "Non riesco a verificare i posti su Google Sheets. La prenotazione è temporaneamente disabilitata: riprova tra poco.";
-        state.pickerStatus.className = "cf-seat-hint is-warning";
-      } else if (selectedCount === quantity) {
+      if (selectedCount === quantity) {
         state.pickerStatus.textContent = "Perfetto: hai selezionato tutti i posti richiesti.";
         state.pickerStatus.className = "cf-seat-hint is-valid";
       } else {
@@ -177,7 +152,7 @@
     updateHiddenFields();
 
     const submit = document.querySelector("#booking-form .submit-button");
-    if (submit) submit.disabled = state.availabilityLoading || !verified || selectedCount !== quantity;
+    if (submit) submit.disabled = state.availabilityLoading || selectedCount !== quantity;
   }
 
   function getNextEvent() {
@@ -206,18 +181,13 @@
     const map = state.weeklyDetails.querySelector(".cf-week-map");
     const status = state.weeklyDetails.querySelector(".cf-week-status");
     if (!film || !map) return;
-    const verified = availabilityVerified();
     const booked = bookedIdsFor(film);
     const free = Math.max(0, SEATS.length - booked.length);
     if (title) title.textContent = `${film.title} · ${film.date}`;
-    if (summary) summary.textContent = verified
-      ? `${free} ${free === 1 ? "posto disponibile" : "posti disponibili"} su 7`
-      : "Disponibilità non verificata";
-    if (status) status.textContent = verified
-      ? "Disponibilità aggiornata da Google Sheets."
-      : (state.availabilityLoading
-          ? "Sto leggendo le prenotazioni…"
-          : "Non è stato possibile leggere le prenotazioni. I posti non vengono considerati liberi finché il foglio non risponde.");
+    if (summary) summary.textContent = `${free} ${free === 1 ? "posto disponibile" : "posti disponibili"} su 7`;
+    if (status) status.textContent = state.availabilityLoaded || !(window.POSTI_CONFIG || {}).url
+      ? "Disponibilità aggiornata per l'evento in arrivo."
+      : "Disponibilità non ancora verificata: riprova tra poco.";
     map.innerHTML = renderMapMarkup(film, [], false);
   }
 
@@ -293,106 +263,57 @@
     const url = (window.POSTI_CONFIG || {}).url;
     if (!url) {
       state.availabilityLoaded = false;
-      state.availabilityLoading = false;
-      state.availabilityError = "Google Sheets non configurato";
       state.bookedByFilm = {};
       renderBookingPicker();
       renderWeeklyAvailability();
-      return false;
+      return;
     }
-    if (state.refreshInProgress) return false;
-
-    state.refreshInProgress = true;
-    state.availabilityLoading = true;
-    renderBookingPicker();
-    renderWeeklyAvailability();
-
     try {
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 12000);
+      const timer = setTimeout(() => controller.abort(), 8000);
       const query = new URLSearchParams({
         action: "availability",
         t: String(Date.now()),
         filmAliases: JSON.stringify(filmAliases())
       });
       const response = await fetch(url + (url.includes("?") ? "&" : "?") + query.toString(), {
-        method: "GET",
         signal: controller.signal,
-        cache: "no-store",
-        redirect: "follow"
+        cache: "no-store"
       });
       clearTimeout(timer);
-      if (!response.ok) throw new Error("Google Sheets ha risposto con HTTP " + response.status);
       const data = await response.json();
-      if (!data || data.ok !== true) throw new Error(data && data.error ? data.error : "Risposta disponibilità non valida");
+      if (!response.ok || !data || !data.ok) throw new Error("Risposta disponibilità non valida");
 
-      const seatMap = data.bookedSeatsByFilm || data.bookedSeats || data.seatsByFilm || null;
-      if (!seatMap || typeof seatMap !== "object") {
-        throw new Error("Il backend non restituisce la mappa dei posti. Aggiorna Code.gs e pubblica una nuova versione della Web App.");
-      }
-
-      const nextBooked = {};
-      films.forEach(film => {
-        const id = keyFor(film);
-        const legacy = legacyKeyFor(film);
-        let rawIds;
-
-        if (Object.prototype.hasOwnProperty.call(seatMap, id)) rawIds = seatMap[id];
-        else if (Object.prototype.hasOwnProperty.call(seatMap, legacy)) rawIds = seatMap[legacy];
-
-        if (!Array.isArray(rawIds)) {
-          throw new Error("Mappa dei posti mancante per la proiezione " + id + ". Aggiorna Code.gs e ripubblica la Web App.");
-        }
-        const ids = [...new Set(rawIds.map(String).filter(seatId => SEAT_BY_ID[seatId]))];
-
-        nextBooked[id] = ids;
-        film.booked = ids.length;
-        const capacities = data.capacities || {};
-        const rawCapacity = Object.prototype.hasOwnProperty.call(capacities, id) ? capacities[id] : capacities[legacy];
-        const capacity = Number(rawCapacity != null ? rawCapacity : data.capacity);
-        if (Number.isFinite(capacity) && capacity >= 0) film.seats = Math.min(SEATS.length, capacity);
+      state.bookedByFilm = {};
+      const seatMap = data.bookedSeats || {};
+      Object.keys(seatMap).forEach(key => {
+        const ids = Array.isArray(seatMap[key]) ? seatMap[key] : [];
+        state.bookedByFilm[key] = [...new Set(ids.filter(id => SEAT_BY_ID[id]))];
       });
-
-      state.bookedByFilm = nextBooked;
       state.availabilityLoaded = true;
-      state.availabilityError = "";
-      return true;
     } catch (error) {
-      console.warn("Cinefriends: impossibile aggiornare la mappa dei posti da Google Sheets.", error);
+      console.warn("Mappa posti non aggiornata", error);
       state.availabilityLoaded = false;
-      state.availabilityError = error && error.message ? error.message : "Errore di lettura";
-      return false;
-    } finally {
-      state.availabilityLoading = false;
-      state.refreshInProgress = false;
-      // Aggiorna prima il contatore tradizionale; la mappa grafica deve essere
-      // l'ultimo elemento a impostare lo stato del pulsante (fail-closed).
-      if (typeof updateFilmOptions === "function") updateFilmOptions();
-      if (typeof seatsRender === "function") seatsRender();
-      renderBookingPicker();
-      renderWeeklyAvailability();
     }
+    renderBookingPicker();
+    renderWeeklyAvailability();
   }
 
-  // Mantiene il contatore tradizionale e aggiorna la mappa con gli ID esatti dei posti.
+  // Estende il caricamento già usato dal sito, senza duplicarne la logica del contatore.
   const originalLoadAvailability = typeof loadAvailability === "function" ? loadAvailability : null;
   if (originalLoadAvailability) {
     window.loadAvailability = async function (...args) {
       state.availabilityLoading = Boolean((window.POSTI_CONFIG || {}).url);
       renderBookingPicker();
-      renderWeeklyAvailability();
       try {
-        await originalLoadAvailability.apply(this, args);
-      } catch (error) {
-        console.warn("Aggiornamento contatore non riuscito", error);
+        return await originalLoadAvailability.apply(this, args);
+      } finally {
+        await refreshSeatAvailability();
+        state.availabilityLoading = false;
+        renderBookingPicker();
       }
-      return refreshSeatAvailability();
     };
-  } else {
-    window.loadAvailability = refreshSeatAvailability;
   }
-
-  window.refreshCinefriendsSeatAvailability = refreshSeatAvailability;
 
   async function reserveSeatsWithSelection(form, film) {
     const url = (window.POSTI_CONFIG || {}).url;
@@ -426,9 +347,6 @@
       if (data && data.ok) {
         const key = keyFor(film);
         state.bookedByFilm[key] = [...new Set([...(state.bookedByFilm[key] || []), ...state.selected])];
-        state.availabilityLoaded = true;
-        renderBookingPicker();
-        renderWeeklyAvailability();
         // Conserva i nomi dei posti nei campi hidden fino all'invio di Web3Forms ed EmailJS.
         return { status: "ok" };
       }
@@ -449,13 +367,18 @@
   }
   window.reserveSeats = reserveSeatsWithSelection;
 
+  function getBookingFieldValue(form, name) {
+    const field = form.elements.namedItem(name);
+    return field && typeof field.value !== "undefined" ? String(field.value).trim() : "";
+  }
+
   async function sendConfirmationEmailWithSeats(form) {
     const config = window.CONFERMA_CONFIG || {};
     if (!config.publicKey || !config.serviceId || !config.templateId) return false;
     try {
       const film = films[document.getElementById("film").selectedIndex] || films[0];
       const times = filmTimes(film);
-      const place = film.venue + ", " + film.address;
+      const place = [film.venue, film.address].filter(Boolean).join(", ");
       const details = "Prenotazione Cinefriends: " + film.title + ". Ti aspettiamo!";
       let google = "", ics = "";
       if (times) {
@@ -464,35 +387,67 @@
         }), window.location.href).href;
         google = ics + "&g=1";
       }
+
+      // Recupera i posti dallo stato della mappa (fonte primaria), non soltanto
+      // dagli input hidden del form: così EmailJS riceve sempre i valori scelti.
+      const selectedIds = Array.isArray(state.selected) ? [...state.selected] : [];
+      const selectedNames = selectedIds.map(filmLabel).filter(Boolean);
+      const seatSelection = selectedNames.length
+        ? selectedNames.join(", ")
+        : getBookingFieldValue(form, "Posti scelti");
+      const seatCountFromForm = Number(getBookingFieldValue(form, "Numero di posti")) || 0;
+      const seatCount = selectedIds.length || seatCountFromForm;
+
+      // Sincronizza gli hidden input anche immediatamente prima dell'invio.
+      if (state.selectedNamesInput) state.selectedNamesInput.value = seatSelection;
+      if (state.selectedIdsInput) state.selectedIdsInput.value = selectedIds.join(",");
+
+      const templateParams = {
+        to_email: getBookingFieldValue(form, "email"),
+        to_name: getBookingFieldValue(form, "name"),
+        film: film.title,
+        film_id: keyFor(film),
+        date: film.date,
+        time: film.time,
+        venue: film.venue,
+        address: film.address,
+        duration: Number(film.duration) > 0 ? formatDuration(film.duration) : "Non specificata",
+        attendance: getBookingFieldValue(form, "Partecipazione"),
+        google_calendar_url: google,
+        ics_page_url: ics,
+
+        // Nomi usati nel template EmailJS attuale + alias italiani espliciti.
+        seats: String(seatCount),
+        seat_selection: seatSelection,
+        numero_posti: String(seatCount),
+        posti_assegnati: seatSelection,
+        posti_scelti: seatSelection,
+        seat_ids: selectedIds.join(", ")
+      };
+
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 10000);
-      const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: controller.signal,
-        body: JSON.stringify({
-          service_id: config.serviceId,
-          template_id: config.templateId,
-          user_id: config.publicKey,
-          template_params: {
-            to_email: form.elements["email"].value,
-            to_name: form.elements["name"].value,
-            film: film.title,
-            film_id: keyFor(film),
-            date: film.date,
-            time: film.time,
-            venue: film.venue,
-            address: film.address,
-            seats: form.elements["Numero di posti"].value,
-            seat_selection: form.elements["Posti scelti"].value,
-            attendance: form.elements["Partecipazione"].value,
-            duration: Number(film.duration) > 0 ? formatDuration(film.duration) : "Non specificata",
-            google_calendar_url: google,
-            ics_page_url: ics
-          }
-        })
-      });
-      clearTimeout(timer);
+      let response;
+      try {
+        response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            service_id: config.serviceId,
+            template_id: config.templateId,
+            user_id: config.publicKey,
+            template_params: templateParams
+          })
+        });
+      } finally {
+        clearTimeout(timer);
+      }
+
+      if (!response.ok) {
+        const errorDetails = await response.text().catch(() => "");
+        console.warn("EmailJS ha rifiutato l'email di conferma", response.status, errorDetails);
+      }
       return response.ok;
     } catch (error) {
       console.warn("Email di conferma non inviata", error);
@@ -551,11 +506,6 @@
         return;
       }
       updateHiddenFields();
-      if (databaseConfigured() && (!state.availabilityLoaded || state.availabilityLoading)) {
-        fail("Non posso verificare la disponibilità su Google Sheets. Riprova tra qualche secondo: non accetto prenotazioni senza un controllo aggiornato.");
-        await refreshSeatAvailability();
-        return;
-      }
       if (chosen && requiredSeats > seatsLeft(chosen)) {
         fail("Non ci sono abbastanza posti disponibili per questa serata.");
         return;
@@ -631,17 +581,5 @@
     setupWeeklyAccordion();
     renderBookingPicker();
     renderWeeklyAvailability();
-
-    // Se per qualche motivo script.js non avvia il caricamento, avvialo qui.
-    if (!originalLoadAvailability) refreshSeatAvailability();
-
-    // Aggiornamento automatico delle mappe ogni 30 secondi e al ritorno sulla scheda.
-    window.setInterval(() => {
-      if (document.visibilityState === "visible") refreshSeatAvailability();
-    }, 30000);
-    window.addEventListener("focus", () => refreshSeatAvailability());
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible") refreshSeatAvailability();
-    });
   });
 })();

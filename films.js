@@ -5,8 +5,10 @@
 // Se cambi titolo/data a una proiezione già presente nel vecchio foglio, NON modificare legacyKey.
 // duration: numero di minuti (es. 103, senza virgolette).
 // Il primo elemento è il film in evidenza sulla homepage.
-const films = [
-  {
+
+//TEMPLATE
+
+/*{
     id: "cf-proj-001",
     legacyKey: "Pulp Fiction — Lunedì 9 Novembre",
     title: "Pulp Fiction",
@@ -17,56 +19,12 @@ const films = [
     description: "Si incrociano le strade di personaggi legati al crimine. Un pugile che mente a un capo banda, due sicari che discutono massaggi ai piedi e panini, una coppia che rapina una caffetteria e altri danno vita a un dramma criminale comico quanto brutale.",
     date: "Lunedì 9 Novembre",
     time: "Ore 21:00",
-    venue: "Sala Simo",
+    venue: "Sala Smio",
     address: "Via delle Robinie 15, Roma",
     color: "terracotta"
-  },
-  {
-    id: "cf-proj-002",
-    legacyKey: "Il Favoloso Mondo di Amélie — Lunedì 16 Novembre",
-    title: "Il Favoloso Mondo di Amélie",
-    duration: 122,
-    posterTitle: "IL FAVOLOSO<br>MONDO DI AMÉLIE",
-    poster: "assets/locandine/amelie.jpg",
-    genre: "Commedia · 2001",
-    description: "Una giovane donna decide di cambiare in segreto la vita delle persone che incontra, riscoprendo intanto la propria.",
-    date: "Lunedì 16 Novembre",
-    time: "Ore 21:00",
-    venue: "Sala Simo",
-    address: "Via delle Robinie 15, Roma",
-    color: "plum"
-  },
-  {
-    id: "cf-proj-003",
-    legacyKey: "Nuovo Cinema Paradiso — Lunedì 23 Novembre",
-    title: "Nuovo Cinema Paradiso",
-    duration: 155,
-    posterTitle: "NUOVO CINEMA<br>PARADISO",
-    poster: "assets/locandine/cinema_paradiso.jpg",
-    genre: "Drammatico · 1988",
-    description: "Un omaggio alla magia del grande schermo, all'amicizia e ai ricordi che ci accompagnano per tutta la vita.",
-    date: "Lunedì 23 Novembre",
-    time: "Ore 21:00",
-    venue: "Sala Simo",
-    address: "Via delle Robinie 15, Roma",
-    color: "olive"
-  },
-  {
-    id: "cf-proj-004",
-    legacyKey: "The Truman Show — Lunedì 30 Novembre",
-    title: "The Truman Show",
-    duration: 103,
-    posterTitle: "THE TRUMAN<br>SHOW",
-    poster: "assets/locandine/truman_show.jpg",
-    genre: "Fantascienza · 1998",
-    description: "E se il mondo che conosci fosse soltanto un enorme palcoscenico? Una commedia brillante che apre molte domande.",
-    date: "Lunedì 30 Novembre",
-    time: "Ore 21:00",
-    venue: "Sala Simo",
-    address: "Via delle Robinie 15, Roma",
-    color: "blue"
-  },
-  {
+  }
+
+    {
     id: "cf-proj-005",
     legacyKey: "Eternal Sunshine of the Spotless Mind — Lunedì 7 Dicembre",
     title: "Eternal Sunshine of the Spotless Mind",
@@ -77,10 +35,118 @@ const films = [
     description: "Clemetine, stanca del rapporto con Joel, si fa asportare dalla mente la parte relativa alla loro storia. Quando lui lo scopre, fa lo stesso, ma durante il procedimento cambia idea.",
     date: "Lunedì 7 Dicembre",
     time: "Ore 21:00",
-    venue: "Sala Simo",
+    venue: "Sala Smio",
     address: "Via delle Robinie 15, Roma",
     color: "blue"
   }
+*/
+
+const films = [
+  {
+    id: "cf-proj-001",
+    legacyKey: "The Big Lebowski — Lunedì 9 Novembre",
+    title: "The Big Lebowski",
+    duration: 117,
+    posterTitle: "THE BIG<br>LEBOWSKI",
+    poster: "assets/locandine/lebowski.jpg",
+    genre: "Commedia/Giallo · 1998",
+    description: "Drugo è un disoccupato giocatore di bowling rimasto legato agli anni Settanta, che si trova coinvolto in un doppio complotto per un puro caso di omonimia.",
+    date: "Lunedì 9 Novembre",
+    time: "Ore 21:00",
+    venue: "Sala Smio",
+    address: "Via delle Robinie 15, Roma",
+    color: "terracotta"
+  },
+  {
+    id: "cf-proj-002",
+    legacyKey: "The Truman Show — Lunedì 16 Novembre",
+    title: "The Truman Show",
+    duration: 103,
+    posterTitle: "THE TRUMAN<br>SHOW",
+    poster: "assets/locandine/truman_show.jpg",
+    genre: "Fantascienza · 1998",
+    description: "E se il mondo che conosci fosse soltanto un enorme palcoscenico? Una commedia brillante che apre molte domande.",
+    date: "Lunedì 30 Novembre",
+    time: "Ore 21:00",
+    venue: "Sala Lò",
+    address: "Viale Val Padana 126, Roma",
+    color: "plum"
+  },
+  {
+    id: "cf-proj-003",
+    legacyKey: "The Prestige — Lunedì 23 Novembre",
+    title: "The Prestige",
+    duration: 130,
+    posterTitle: "THE<br>PRESTIGE",
+    poster: "assets/locandine/prestige.webp",
+    genre: "Thriller/Sci-fi · 2006",
+    description: "Nella Londra dell'età vittoriana, due maghi-illusionisti, Robert Angier e Alfred Borden, un tempo amici e colleghi, si sfidano ogni sera a distanza mettendo in scena spettacoli al limite del possibile.",
+    date: "Lunedì 23 Novembre",
+    time: "Ore 21:00",
+    venue: "Sala Smio",
+    address: "Via delle Robinie 15, Roma",
+    color: "olive"
+  },
+  {
+    id: "cf-proj-004",
+    legacyKey: "Snowpiercer— Lunedì 30 Novembre",
+    title: "Snowpiercer",
+    duration: 126,
+    posterTitle: "SNOWPIERCER<br>",
+    poster: "assets/locandine/snowpiercer.webp",
+    genre: "Azione/Sci-fi · 2013",
+    description: "Durante una nuova era glaciale causata da un esperimento fallito, un gruppo di sopravvissuti viaggia su di un treno speciale che non si ferma mai. Le differenze fra i passeggeri, però, portano presto alla rivolta.",
+    date: "Lunedì 30 Novembre",
+    time: "Ore 21:00",
+    venue: "Sala Simo",
+    address: "Via delle Robinie 15, Roma",
+    color: "plum"
+  },
+  {
+    id: "cf-proj-005",
+    legacyKey: "The Wolf of Wall Street — Mercoledì 9 Dicembre",
+    title: "The Wolf of Wall Street",
+    duration: 179,
+    posterTitle: "THE WOLF<br>OF WALL STREET",
+    poster: "assets/locandine/eternal_sunshine.webp",
+    genre: "Commedia/Thriller · 2013",
+    description: "Nella New York degli anni Ottanta, eccessi e corruzione segnano la curva discendente della brillante carriera di Jordan Belfort, un ambizioso broker in grado di guadagnare migliaia di dollari al minuto e di spenderne altrettanti in droga e futilità.",
+    date: "Mercoledì 9 Dicembre",
+    time: "Ore 21:00",
+    venue: "Sala Lò",
+    address: "Viale Val Padana 126, Roma",
+    color: "terracotta"
+  },
+  {
+    id: "cf-proj-006",
+    legacyKey: "Uncut Gems — Lunedì 14 Dicembre",
+    title: "Uncut Gems",
+    duration: 135,
+    posterTitle: "THE WOLF<br>OF WALL STREET",
+    poster: "assets/locandine/eternal_sunshine.webp",
+    genre: "Commedia/Thriller · 2013",
+    description: "Il carismatico gioielliere Howard Ratner fa una scommessa che potrebbe procurargli una grossa fortuna. L'uomo deve riuscire a conciliare gli affari, la famiglia e i suoi avversari in un gioco di equilibri precari che potrebbe costargli caro.",
+    date: "Lunedì 14 Dicembre",
+    time: "Ore 21:00",
+    venue: "Sala Smio",
+    address: "Via delle Robinie 15, Roma",
+    color: "olive"
+  },
+  {
+    id: "cf-proj-007",
+    legacyKey: "The Holdovers — Lunedì 21 Dicembre",
+    title: "The Holdovers",
+    duration: 133,
+    posterTitle: "THE<br>HOLDOVERS",
+    poster: "assets/locandine/eternal_sunshine.webp",
+    genre: "Commedia/Thriller · 2013",
+    description: "Un insegnante scontroso è costretto a trascorrere le vacanze di Natale con un gruppo di alunni, sviluppando un'insolita relazione con un piantagrane intelligente e con il capo cuoco di una scuola del New England.",
+    date: "Lunedì 21 Dicembre",
+    time: "Ore 21:00",
+    venue: "Sala Smio",
+    address: "Via delle Robinie 15, Roma",
+    color: "blue"
+  } 
 ];
 
 // Controlli rapidi in console: gli ID devono esserci ed essere tutti diversi.

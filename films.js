@@ -66,7 +66,7 @@ const films = [
     poster: "assets/locandine/truman_show.jpg",
     genre: "Fantascienza · 1998",
     description: "E se il mondo che conosci fosse soltanto un enorme palcoscenico? Una commedia brillante che apre molte domande.",
-    date: "Lunedì 30 Novembre",
+    date: "Lunedì 16 Novembre",
     time: "Ore 21:00",
     venue: "Sala Lò",
     address: "Viale Val Padana 126, Roma",

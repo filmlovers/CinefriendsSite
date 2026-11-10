@@ -44,21 +44,6 @@
 const films = [
   {
     id: "cf-proj-001",
-    legacyKey: "The Big Lebowski — Lunedì 9 Novembre",
-    title: "The Big Lebowski",
-    duration: 117,
-    posterTitle: "THE BIG<br>LEBOWSKI",
-    poster: "assets/locandine/lebowski.jpg",
-    genre: "Commedia/Giallo · 1998",
-    description: "Drugo è un disoccupato giocatore di bowling rimasto legato agli anni Settanta, che si trova coinvolto in un doppio complotto per un puro caso di omonimia.",
-    date: "Lunedì 9 Novembre",
-    time: "Ore 21:00",
-    venue: "Sala Smio",
-    address: "Via delle Robinie 15, Roma",
-    color: "terracotta"
-  },
-  {
-    id: "cf-proj-002",
     legacyKey: "The Truman Show — Lunedì 16 Novembre",
     title: "The Truman Show",
     duration: 103,
@@ -73,7 +58,7 @@ const films = [
     color: "plum"
   },
   {
-    id: "cf-proj-003",
+    id: "cf-proj-002",
     legacyKey: "The Prestige — Lunedì 23 Novembre",
     title: "The Prestige",
     duration: 130,
@@ -88,7 +73,7 @@ const films = [
     color: "olive"
   },
   {
-    id: "cf-proj-004",
+    id: "cf-proj-003",
     legacyKey: "Snowpiercer— Lunedì 30 Novembre",
     title: "Snowpiercer",
     duration: 126,
@@ -103,7 +88,7 @@ const films = [
     color: "plum"
   },
   {
-    id: "cf-proj-005",
+    id: "cf-proj-004",
     legacyKey: "The Wolf of Wall Street — Mercoledì 9 Dicembre",
     title: "The Wolf of Wall Street",
     duration: 179,
@@ -118,7 +103,7 @@ const films = [
     color: "terracotta"
   },
   {
-    id: "cf-proj-006",
+    id: "cf-proj-005",
     legacyKey: "Uncut Gems — Lunedì 14 Dicembre",
     title: "Uncut Gems",
     duration: 135,
@@ -133,7 +118,7 @@ const films = [
     color: "olive"
   },
   {
-    id: "cf-proj-007",
+    id: "cf-proj-006",
     legacyKey: "The Holdovers — Lunedì 21 Dicembre",
     title: "The Holdovers",
     duration: 133,
